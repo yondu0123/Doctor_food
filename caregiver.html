@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>닥터푸드 - 간병인 앱</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f0f4f8;
+      color: #2d3748;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #c05621, #9c4221);
+      color: white;
+      padding: 20px 20px 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .app-logo i { color: #fbd38d; }
+    .role-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .header-icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .caregiver-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .caregiver-avatar {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .caregiver-detail h2 { font-size: 17px; font-weight: 700; }
+    .caregiver-detail p { font-size: 12px; color: rgba(255,255,255,0.8); }
+
+    /* 오늘 할 일 요약 */
+    .todo-summary {
+      background: white;
+      margin: 0 16px;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      margin-top: -8px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .todo-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #718096;
+      margin-bottom: 10px;
+    }
+
+    .todo-progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .todo-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c05621, #ed8936);
+      border-radius: 4px;
+      width: 65%;
+    }
+
+    .todo-progress-text {
+      font-size: 12px;
+      color: #718096;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .todo-progress-text span:last-child { color: #c05621; font-weight: 700; }
+
+    /* 메인 */
+    .main-content { padding: 16px 16px 90px; }
+
+    .section-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title i { color: #c05621; }
+
+    /* 환자 체크리스트 */
+    .patient-checklist { display: flex; flex-direction: column; gap: 10px; }
+
+    .patient-check-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .patient-check-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: #f7fafc;
+      cursor: pointer;
+    }
+
+    .patient-check-avatar { font-size: 24px; }
+
+    .patient-check-info { flex: 1; }
+    .patient-check-name { font-size: 14px; font-weight: 700; }
+    .patient-check-tags { display: flex; gap: 4px; margin-top: 2px; }
+
+    .mini-tag {
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .mini-tag.diabetes { background: #fef3c7; color: #92400e; }
+    .mini-tag.kidney { background: #dbeafe; color: #1e40af; }
+    .mini-tag.hypertension { background: #fee2e2; color: #991b1b; }
+    .mini-tag.normal { background: #d1fae5; color: #065f46; }
+
+    .patient-check-status { display: flex; gap: 6px; }
+
+    .check-dot {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .check-dot.done { background: #c6f6d5; color: #1a6b4a; }
+    .check-dot.miss { background: #fed7d7; color: #e53e3e; }
+    .check-dot.pending { background: #e2e8f0; color: #718096; }
+
+    .patient-check-body { padding: 12px; }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f4f8;
+    }
+
+    .check-row:last-child { border-bottom: none; }
+
+    .check-label { flex: 1; font-size: 13px; }
+    .check-sublabel { font-size: 11px; color: #718096; }
+
+    .check-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .check-btn.done { background: #c6f6d5; color: #1a6b4a; }
+    .check-btn.todo { background: #c05621; color: white; }
+    .check-btn.todo:hover { background: #9c4221; }
+    .check-btn.skip { background: #fed7d7; color: #e53e3e; }
+
+    /* 응급 정보 */
+    .emergency-card {
+      background: linear-gradient(135deg, #fff5f5, #fed7d7);
+      border-radius: 12px;
+      padding: 14px;
+      border-left: 4px solid #e53e3e;
+    }
+
+    .emergency-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e53e3e;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .emergency-items { display: flex; flex-direction: column; gap: 8px; }
+
+    .emergency-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .emergency-item i { color: #e53e3e; width: 16px; margin-top: 2px; }
+
+    .emergency-call-btn {
+      width: 100%;
+      background: #e53e3e;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* 사진 업로드 */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .upload-item {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      background: #f7fafc;
+      border: 2px dashed #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-item:hover { border-color: #c05621; background: #fff5eb; }
+    .upload-item i { font-size: 22px; color: #a0aec0; margin-bottom: 4px; }
+    .upload-item span { font-size: 10px; color: #718096; text-align: center; }
+
+    .upload-item.uploaded {
+      background: #f0fff4;
+      border-color: #1a6b4a;
+      border-style: solid;
+    }
+
+    .upload-item.uploaded i { color: #1a6b4a; }
+
+    /* 채팅 */
+    .chat-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .chat-preview-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f7fafc;
+      cursor: pointer;
+    }
+
+    .chat-preview-avatar { font-size: 28px; }
+    .chat-preview-info { flex: 1; }
+    .chat-preview-name { font-size: 13px; font-weight: 700; }
+    .chat-preview-msg { font-size: 11px; color: #718096; }
+    .chat-preview-time { font-size: 10px; color: #a0aec0; }
+
+    .unread-badge {
+      background: #e53e3e;
+      color: white;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* 하단 탭바 */
+    .bottom-tab {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 4px;
+      cursor: pointer;
+      font-size: 10px;
+      color: #a0aec0;
+      gap: 4px;
+      border-top: 3px solid transparent;
+    }
+
+    .tab-item i { font-size: 20px; }
+    .tab-item.active { color: #c05621; border-top-color: #c05621; }
+
+    /* 토스트 */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d3748;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      z-index: 2000;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .toast.hidden { display: none; }
+    .toast.success { background: #1a6b4a; }
+    .toast.warn { background: #c05621; }
+
+    .link-nav {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #718096;
+    }
+
+    .link-nav a { color: #c05621; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <div class="app-header">
+    <div class="header-top">
+      <div class="app-logo">
+        <i class="fas fa-heartbeat"></i>
+        닥터푸드
+        <span class="role-badge">간병인</span>
+      </div>
+      <button class="header-icon-btn" onclick="showToast('알림 확인')">
+        <i class="fas fa-bell"></i>
+      </button>
+    </div>
+    <div class="caregiver-info">
+      <div class="caregiver-avatar">👩‍⚕️</div>
+      <div class="caregiver-detail">
+        <h2>이간병 간병인</h2>
+        <p>행복한 요양원 · 담당 환자 5명</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 오늘 할 일 진행률 -->
+  <div class="todo-summary">
+    <div class="todo-title">📋 오늘의 업무 진행률 · 2026.04.30</div>
+    <div class="todo-progress-bar">
+      <div class="todo-progress-fill"></div>
+    </div>
+    <div class="todo-progress-text">
+      <span>식사 체크 13/20 · 투약 체크 8/15</span>
+      <span>65% 완료</span>
+    </div>
+  </div>
+
+  <!-- 메인 -->
+  <div class="main-content">
+
+    <!-- 환자별 체크리스트 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fas fa-clipboard-check"></i> 담당 환자 체크리스트</div>
+        <span style="font-size:12px;color:#718096">5명 담당</span>
+      </div>
+
+      <div class="patient-checklist">
+
+        <!-- 환자 1: 김순자 -->
+        <div class="patient-check-item">
+          <div class="patient-check-header" onclick="togglePatient('p1')">
+            <div class="patient-check-avatar">👴</div>
+            <div class="patient-check-info">
+              <div class="patient-check-name">김순자 (82세)</div>
+              <div class="patient-check-tags">
+                <span class="mini-tag diabetes">당뇨식</span>
+                <span class="mini-tag hypertension">고혈압</span>
+              </div>
+            </div>
+            <div class="patient-check-status">
+              <div class="check-dot done" title="아침식사">🍳</div>
+              <div class="check-dot done" title="점심식사">☀️</div>
+              <div class="check-dot miss" title="점심투약">💊</div>
+            </div>
+          </div>
+          <div class="patient-check-body" id="p1">
+            <div class="check-row">
+              <div>
+                <div class="check-label">아침 식사</div>
+                <div class="check-sublabel">현미밥, 된장국, 두부조림</div>
+              </div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+            <div class="check-row">
+              <div>
+                <div class="check-label">아침 투약 (혈압약, 당뇨약)</div>
+                <div class="check-sublabel">08:00 예정</div>
+              </div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+            <div class="check-row">
+              <div>
+                <div class="check-label">점심 식사</div>
+                <div class="check-sublabel">잡곡밥, 닭가슴살 구이</div>
+              </div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+            <div class="check-row" style="background:#fff5f5;border-radius:8px;padding:8px;">
+              <div>
+                <div class="check-label" style="color:#e53e3e">⚠️ 점심 투약 (혈압약)</div>
+                <div class="check-sublabel">13:00 예정 → 미완료</div>
+              </div>
+              <button class="check-btn todo" onclick="markDone(this, '김순자 점심 투약')">확인</button>
+            </div>
+            <div class="check-row">
+              <div>
+                <div class="check-label">저녁 식사 (예정)</div>
+                <div class="check-sublabel">연두부찌개, 브로콜리 찜</div>
+              </div>
+              <button class="check-btn pending" style="background:#e2e8f0;color:#718096">예정</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 환자 2: 이철수 -->
+        <div class="patient-check-item">
+          <div class="patient-check-header" onclick="togglePatient('p2')">
+            <div class="patient-check-avatar">👵</div>
+            <div class="patient-check-info">
+              <div class="patient-check-name">이철수 (78세)</div>
+              <div class="patient-check-tags">
+                <span class="mini-tag kidney">저단백식</span>
+              </div>
+            </div>
+            <div class="patient-check-status">
+              <div class="check-dot done">🍳</div>
+              <div class="check-dot miss">☀️</div>
+              <div class="check-dot done">💊</div>
+            </div>
+          </div>
+          <div class="patient-check-body" id="p2" style="display:none">
+            <div class="check-row">
+              <div>
+                <div class="check-label">아침 식사</div>
+                <div class="check-sublabel">백미밥, 채소국 (저칼륨)</div>
+              </div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+            <div class="check-row" style="background:#fff5f5;border-radius:8px;padding:8px;">
+              <div>
+                <div class="check-label" style="color:#e53e3e">⚠️ 점심 식사 거부</div>
+                <div class="check-sublabel">식욕 없다고 하심</div>
+              </div>
+              <button class="check-btn skip">거부 기록됨</button>
+            </div>
+            <div class="check-row">
+              <div>
+                <div class="check-label">투약 (투석보조제, 철분제)</div>
+                <div class="check-sublabel">08:10 완료</div>
+              </div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 환자 3: 박영희 -->
+        <div class="patient-check-item">
+          <div class="patient-check-header" onclick="togglePatient('p3')">
+            <div class="patient-check-avatar">👴</div>
+            <div class="patient-check-info">
+              <div class="patient-check-name">박영희 (75세)</div>
+              <div class="patient-check-tags">
+                <span class="mini-tag normal">일반식</span>
+              </div>
+            </div>
+            <div class="patient-check-status">
+              <div class="check-dot done">🍳</div>
+              <div class="check-dot done">☀️</div>
+              <div class="check-dot done">💊</div>
+            </div>
+          </div>
+          <div class="patient-check-body" id="p3" style="display:none">
+            <div class="check-row">
+              <div><div class="check-label">아침/점심 식사</div></div>
+              <button class="check-btn done">✅ 모두 완료</button>
+            </div>
+            <div class="check-row">
+              <div><div class="check-label">투약 (종합비타민)</div></div>
+              <button class="check-btn done">✅ 완료</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 사진 업로드 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fas fa-camera"></i> 활동 사진 업로드</div>
+        <span style="font-size:11px;color:#718096">보호자에게 전송됨</span>
+      </div>
+      <div class="upload-grid">
+        <div class="upload-item uploaded" onclick="showToast('아침 식사 사진 업로드 완료', 'success')">
+          <i class="fas fa-check-circle"></i>
+          <span>아침 식사<br/>✅ 업로드됨</span>
+        </div>
+        <div class="upload-item uploaded" onclick="showToast('산책 사진 업로드 완료', 'success')">
+          <i class="fas fa-check-circle"></i>
+          <span>오전 산책<br/>✅ 업로드됨</span>
+        </div>
+        <div class="upload-item uploaded" onclick="showToast('점심 식사 사진 업로드 완료', 'success')">
+          <i class="fas fa-check-circle"></i>
+          <span>점심 식사<br/>✅ 업로드됨</span>
+        </div>
+        <div class="upload-item" onclick="showToast('사진 업로드 기능 준비 중', 'warn')">
+          <i class="fas fa-plus"></i>
+          <span>오후 활동<br/>업로드</span>
+        </div>
+        <div class="upload-item" onclick="showToast('사진 업로드 기능 준비 중', 'warn')">
+          <i class="fas fa-plus"></i>
+          <span>저녁 식사<br/>업로드</span>
+        </div>
+        <div class="upload-item" onclick="showToast('사진 업로드 기능 준비 중', 'warn')">
+          <i class="fas fa-plus"></i>
+          <span>기타<br/>업로드</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 응급 정보 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fas fa-first-aid"></i> 응급 정보</div>
+      </div>
+      <div class="emergency-card">
+        <div class="emergency-title">
+          <i class="fas fa-exclamation-triangle"></i> 김순자 어르신 응급 정보
+        </div>
+        <div class="emergency-items">
+          <div class="emergency-item">
+            <i class="fas fa-heartbeat"></i>
+            <span><strong>기저질환:</strong> 당뇨병 (인슐린 의존성), 고혈압</span>
+          </div>
+          <div class="emergency-item">
+            <i class="fas fa-pills"></i>
+            <span><strong>복용 약:</strong> 혈압약 (아침/점심/저녁), 당뇨약 (아침/점심), 수면제 (저녁)</span>
+          </div>
+          <div class="emergency-item">
+            <i class="fas fa-allergies"></i>
+            <span><strong>알레르기:</strong> 새우, 갑각류</span>
+          </div>
+          <div class="emergency-item">
+            <i class="fas fa-phone"></i>
+            <span><strong>보호자:</strong> 김철민 (아들) 010-1234-5678</span>
+          </div>
+          <div class="emergency-item">
+            <i class="fas fa-hospital"></i>
+            <span><strong>담당 의사:</strong> 서울대병원 내과 박의사 02-1234-5678</span>
+          </div>
+        </div>
+        <button class="emergency-call-btn" onclick="showToast('응급 연락처로 전화 연결 중...', 'warn')">
+          <i class="fas fa-phone"></i> 응급 연락처 전화
+        </button>
+      </div>
+    </div>
+
+    <!-- 보호자 채팅 -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title"><i class="fas fa-comment-dots"></i> 보호자 채팅</div>
+      </div>
+      <div class="chat-list">
+        <div class="chat-preview-item" onclick="showToast('채팅 열기')">
+          <div class="chat-preview-avatar">👨</div>
+          <div class="chat-preview-info">
+            <div class="chat-preview-name">김철민 (김순자 어르신 보호자)</div>
+            <div class="chat-preview-msg">점심 혈압약은 어떻게 됐나요?</div>
+          </div>
+          <div>
+            <div class="chat-preview-time">오후 2:30</div>
+            <div class="unread-badge" style="margin-top:4px">1</div>
+          </div>
+        </div>
+        <div class="chat-preview-item" onclick="showToast('채팅 열기')">
+          <div class="chat-preview-avatar">👩</div>
+          <div class="chat-preview-info">
+            <div class="chat-preview-name">박지수 (박영희 어르신 보호자)</div>
+            <div class="chat-preview-msg">된장찌개 식단에 넣어주실 수 있나요?</div>
+          </div>
+          <div>
+            <div class="chat-preview-time">오전 11:15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="link-nav">
+      <a href="guardian.html">← 보호자 앱 보기</a> &nbsp;|&nbsp;
+      <a href="index.html">관리자 대시보드 →</a>
+    </div>
+
+  </div>
+
+  <!-- 하단 탭바 -->
+  <div class="bottom-tab">
+    <div class="tab-item active">
+      <i class="fas fa-clipboard-check"></i>
+      <span>체크리스트</span>
+    </div>
+    <div class="tab-item" onclick="showToast('식단 탭')">
+      <i class="fas fa-utensils"></i>
+      <span>식단</span>
+    </div>
+    <div class="tab-item" onclick="showToast('사진 탭')">
+      <i class="fas fa-camera"></i>
+      <span>사진</span>
+    </div>
+    <div class="tab-item" onclick="showToast('응급 탭')">
+      <i class="fas fa-first-aid"></i>
+      <span>응급</span>
+    </div>
+    <div class="tab-item" onclick="showToast('채팅 탭')" style="position:relative">
+      <i class="fas fa-comment-dots"></i>
+      <span>채팅</span>
+      <span style="position:absolute;top:6px;background:#e53e3e;color:white;font-size:9px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">1</span>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    function togglePatient(id) {
+      const body = document.getElementById(id);
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function markDone(btn, label) {
+      btn.textContent = '✅ 완료';
+      btn.className = 'check-btn done';
+      btn.onclick = null;
+      btn.closest('.check-row').style.background = '';
+      showToast(`${label} 완료 처리되었습니다!`, 'success');
+    }
+  </script>
+</body>
+</html>
