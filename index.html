@@ -3,886 +3,572 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>닥터푸드 - AI 맞춤 요양원 식단 관리</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <title>닥터푸드 | 고령화 시대를 위한 통합 케어 푸드 플랫폼</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1f2937;
+      background: #f5f8f7;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #14532d;
+      font-size: 22px;
+    }
+    .brand i { color: #22c55e; }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: #475569;
+      flex-wrap: wrap;
+    }
+    .nav-links a:hover { color: #14532d; }
+    .nav-cta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #166534, #22c55e);
+      color: white;
+      box-shadow: 0 10px 24px rgba(22, 101, 52, 0.2);
+    }
+    .btn-secondary {
+      background: white;
+      border-color: #d1d5db;
+      color: #14532d;
+    }
+    .hero {
+      padding: 72px 0 36px;
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(59,130,246,0.10), transparent 25%),
+        linear-gradient(180deg, #f8fffb 0%, #f5f8f7 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #e8f7ee;
+      color: #166534;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+      color: #0f172a;
+    }
+    .hero p {
+      font-size: 18px;
+      color: #475569;
+      margin-bottom: 24px;
+      max-width: 760px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .hero-point {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+    }
+    .hero-point strong { display: block; font-size: 24px; color: #14532d; margin-bottom: 4px; }
+    .hero-point span { font-size: 13px; color: #64748b; }
+    .hero-panel {
+      background: #0f172a;
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+    }
+    .hero-panel h3 { font-size: 20px; margin-bottom: 18px; }
+    .panel-stack {
+      display: grid;
+      gap: 12px;
+    }
+    .panel-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .panel-card .label { font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
+    .panel-card .value { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .panel-card .desc { font-size: 13px; color: #e2e8f0; }
+    .section {
+      padding: 72px 0;
+    }
+    .section-head {
+      margin-bottom: 28px;
+      max-width: 760px;
+    }
+    .section-head .kicker {
+      color: #16a34a;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-head h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
+    .section-head p { color: #64748b; font-size: 17px; }
+    .metrics-grid,
+    .problem-grid,
+    .product-grid,
+    .business-grid,
+    .global-grid,
+    .roadmap-grid,
+    .trust-grid,
+    .cta-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+    .problem-grid { grid-template-columns: repeat(3, 1fr); }
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+    .business-grid { grid-template-columns: repeat(4, 1fr); }
+    .global-grid { grid-template-columns: repeat(4, 1fr); }
+    .trust-grid { grid-template-columns: repeat(4, 1fr); }
+    .cta-grid { grid-template-columns: 1.15fr 0.85fr; align-items: center; }
+    .metric-card,
+    .problem-card,
+    .product-card,
+    .business-card,
+    .global-card,
+    .trust-card,
+    .compare-card,
+    .roadmap-item,
+    .cta-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+    }
+    .metric-card .label,
+    .business-card .label,
+    .global-card .label,
+    .trust-card .label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+    .metric-card .value,
+    .business-card .value,
+    .global-card .value,
+    .trust-card .value { font-size: 34px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    .metric-card .sub,
+    .business-card p,
+    .global-card p,
+    .trust-card .sub { font-size: 14px; color: #475569; }
+    .problem-card i,
+    .product-card i,
+    .roadmap-item i {
+      font-size: 24px;
+      color: #16a34a;
+      margin-bottom: 14px;
+    }
+    .problem-card h3,
+    .product-card h3,
+    .business-card h3,
+    .global-card h3,
+    .roadmap-item h3,
+    .cta-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    .problem-card p,
+    .product-card p,
+    .business-card p,
+    .global-card p,
+    .roadmap-item p,
+    .cta-card p { color: #64748b; font-size: 15px; }
+    .compare-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .compare-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .compare-card li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .compare-card li:last-child { border-bottom: none; padding-bottom: 0; }
+    .chip-good, .chip-mid, .chip-low {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .chip-good { background: #dcfce7; color: #166534; }
+    .chip-mid { background: #eff6ff; color: #1d4ed8; }
+    .chip-low { background: #f8fafc; color: #64748b; }
+    .roadmap-grid { grid-template-columns: repeat(4, 1fr); }
+    .roadmap-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #14532d;
+      color: white;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .cta-section { padding-bottom: 88px; }
+    .cta-card.dark {
+      background: linear-gradient(135deg, #0f172a, #14532d);
+      color: white;
+      border: none;
+    }
+    .cta-card.dark h3,
+    .cta-card.dark p,
+    .cta-card.dark li { color: white; }
+    .cta-card ul {
+      margin-top: 14px;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .cta-card li { font-size: 14px; color: #dbe4ef; }
+    .footer {
+      padding: 24px 0 40px;
+      border-top: 1px solid #e2e8f0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .cta-grid,
+      .compare-wrap { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .problem-grid,
+      .product-grid,
+      .business-grid,
+      .global-grid,
+      .roadmap-grid,
+      .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .container { width: min(100% - 32px, 1180px); }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .hero { padding-top: 48px; }
+      .hero-points,
+      .metrics-grid,
+      .problem-grid,
+      .product-grid,
+      .business-grid,
+      .global-grid,
+      .roadmap-grid,
+      .trust-grid { grid-template-columns: 1fr; }
+      .hero p, .section-head p { font-size: 16px; }
+      .hero-actions, .nav-cta, .nav-links { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <!-- 사이드바 -->
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="logo">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
         <i class="fas fa-heartbeat"></i>
         <span>닥터푸드</span>
       </div>
-      <p class="logo-sub">AI 맞춤 요양원 식단 관리</p>
-    </div>
-    <ul class="nav-menu">
-      <li class="nav-item active" onclick="showPage('dashboard')">
-        <i class="fas fa-th-large"></i><span>대시보드</span>
-      </li>
-      <li class="nav-item" onclick="showPage('patients')">
-        <i class="fas fa-user-injured"></i><span>환자 관리</span>
-      </li>
-      <li class="nav-item" onclick="showPage('ai-diet')">
-        <i class="fas fa-robot"></i><span>AI 식단 추천</span>
-      </li>
-      <li class="nav-item" onclick="showPage('medication')">
-        <i class="fas fa-pills"></i><span>투약 관리</span>
-      </li>
-      <li class="nav-item" onclick="showPage('guardian')">
-        <i class="fas fa-bell"></i><span>보호자 알림</span>
-      </li>
-      <li class="nav-item" onclick="showPage('ingredients')">
-        <i class="fas fa-seedling"></i><span>식자재 관리</span>
-      </li>
-    </ul>
-    <div class="sidebar-footer">
-      <div class="facility-info">
-        <i class="fas fa-hospital"></i>
-        <div>
-          <p class="facility-name">행복한 요양원</p>
-          <p class="facility-count">입소자 32명</p>
-        </div>
+      <nav class="nav-links">
+        <a href="#problem">문제 정의</a>
+        <a href="#metrics">핵심 지표</a>
+        <a href="#product">제품</a>
+        <a href="#business">수익모델</a>
+        <a href="#global">글로벌</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-secondary" href="admin.html"><i class="fas fa-desktop"></i> 관리자 데모</a>
+        <a class="btn btn-primary" href="#contact"><i class="fas fa-briefcase"></i> 투자 문의</a>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- 메인 콘텐츠 -->
-  <main class="main-content">
-    <!-- 상단 헤더 -->
-    <header class="top-header">
-      <div class="header-left">
-        <h1 id="page-title">대시보드</h1>
-        <p id="page-date"></p>
-      </div>
-      <div class="header-right">
-        <div class="search-box">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="환자 검색..." />
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow"><i class="fas fa-seedling"></i> Korea-first, Global-ready Aging Care Platform</div>
+        <h1>고령화 시대의 식사·건강·돌봄 데이터를 연결하는 통합 케어 푸드 플랫폼</h1>
+        <p>닥터푸드는 보호자, 간병인, 관리자 사이에 분절된 업무를 하나의 워크플로우로 통합하여 케어 품질과 운영 효율을 동시에 개선하는 디지털 케어 인프라입니다.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="admin.html"><i class="fas fa-play"></i> 서비스 데모 보기</a>
+          <a class="btn btn-secondary" href="guardian.html"><i class="fas fa-mobile-screen-button"></i> 보호자 앱 보기</a>
+          <a class="btn btn-secondary" href="caregiver.html"><i class="fas fa-user-nurse"></i> 간병인 앱 보기</a>
         </div>
-        <div class="header-icons">
-          <button class="icon-btn" onclick="showNotification()">
-            <i class="fas fa-bell"></i>
-            <span class="badge">3</span>
-          </button>
-          <div class="user-avatar">
-            <i class="fas fa-user-nurse"></i>
+        <div class="hero-points">
+          <div class="hero-point">
+            <strong>3-Role</strong>
+            <span>관리자·보호자·간병인 앱 동시 구현</span>
           </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- 대시보드 페이지 -->
-    <div id="page-dashboard" class="page active">
-      <!-- 통계 카드 -->
-      <div class="stats-grid">
-        <div class="stat-card green">
-          <div class="stat-icon"><i class="fas fa-users"></i></div>
-          <div class="stat-info">
-            <h3>32</h3>
-            <p>전체 입소자</p>
+          <div class="hero-point">
+            <strong>B2B2C</strong>
+            <span>기관 도입 후 가족/보호자 확장 구조</span>
           </div>
-          <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 2명 증가</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-icon"><i class="fas fa-utensils"></i></div>
-          <div class="stat-info">
-            <h3>28</h3>
-            <p>오늘 식사 완료</p>
-          </div>
-          <div class="stat-trend">87.5% 완료율</div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-icon"><i class="fas fa-pills"></i></div>
-          <div class="stat-info">
-            <h3>4</h3>
-            <p>투약 미완료</p>
-          </div>
-          <div class="stat-trend warn"><i class="fas fa-exclamation-triangle"></i> 확인 필요</div>
-        </div>
-        <div class="stat-card purple">
-          <div class="stat-icon"><i class="fas fa-robot"></i></div>
-          <div class="stat-info">
-            <h3>AI</h3>
-            <p>오늘 식단 생성 완료</p>
-          </div>
-          <div class="stat-trend up"><i class="fas fa-check"></i> 32개 맞춤 식단</div>
-        </div>
-      </div>
-
-      <!-- 오늘의 식단 현황 + 알림 -->
-      <div class="dashboard-grid">
-        <!-- 오늘의 식사 현황 -->
-        <div class="card">
-          <div class="card-header">
-            <h2><i class="fas fa-utensils"></i> 오늘의 식사 현황</h2>
-            <span class="date-badge">2026.04.30</span>
-          </div>
-          <div class="meal-timeline">
-            <div class="meal-slot completed">
-              <div class="meal-time">
-                <i class="fas fa-sun"></i>
-                <span>아침 07:30</span>
-              </div>
-              <div class="meal-detail">
-                <p class="meal-name">현미밥, 된장국, 두부조림, 시금치나물</p>
-                <div class="meal-stats">
-                  <span class="completed-count">30명 완료</span>
-                  <span class="skip-count">2명 미완료</span>
-                </div>
-              </div>
-              <span class="meal-badge done">완료</span>
-            </div>
-            <div class="meal-slot in-progress">
-              <div class="meal-time">
-                <i class="fas fa-cloud-sun"></i>
-                <span>점심 12:00</span>
-              </div>
-              <div class="meal-detail">
-                <p class="meal-name">잡곡밥, 미역국, 닭볶음탕, 브로콜리무침</p>
-                <div class="meal-stats">
-                  <span class="completed-count">28명 완료</span>
-                  <span class="skip-count">4명 미완료</span>
-                </div>
-              </div>
-              <span class="meal-badge progress">진행중</span>
-            </div>
-            <div class="meal-slot upcoming">
-              <div class="meal-time">
-                <i class="fas fa-moon"></i>
-                <span>저녁 18:00</span>
-              </div>
-              <div class="meal-detail">
-                <p class="meal-name">AI 추천: 연두부찌개, 고등어구이, 콩나물무침</p>
-                <div class="meal-stats">
-                  <span class="ai-badge"><i class="fas fa-robot"></i> AI 생성</span>
-                </div>
-              </div>
-              <span class="meal-badge upcoming">예정</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 알림 & 주의 환자 -->
-        <div class="card">
-          <div class="card-header">
-            <h2><i class="fas fa-exclamation-circle"></i> 오늘의 알림</h2>
-            <span class="badge-count">5</span>
-          </div>
-          <div class="alert-list">
-            <div class="alert-item danger">
-              <div class="alert-icon"><i class="fas fa-pills"></i></div>
-              <div class="alert-content">
-                <p class="alert-title">김순자 어르신 - 혈압약 미복용</p>
-                <p class="alert-time">오후 2:00 예정 → 미완료</p>
-              </div>
-              <button class="alert-btn" onclick="showPage('medication')">확인</button>
-            </div>
-            <div class="alert-item warning">
-              <div class="alert-icon"><i class="fas fa-utensils"></i></div>
-              <div class="alert-content">
-                <p class="alert-title">이철수 어르신 - 점심 식사 거부</p>
-                <p class="alert-time">오후 12:30 기록됨</p>
-              </div>
-              <button class="alert-btn" onclick="showPage('patients')">확인</button>
-            </div>
-            <div class="alert-item info">
-              <div class="alert-icon"><i class="fas fa-robot"></i></div>
-              <div class="alert-content">
-                <p class="alert-title">AI 식단 최적화 완료</p>
-                <p class="alert-time">내일 식단 32개 생성 완료</p>
-              </div>
-              <button class="alert-btn" onclick="showPage('ai-diet')">보기</button>
-            </div>
-            <div class="alert-item success">
-              <div class="alert-icon"><i class="fas fa-seedling"></i></div>
-              <div class="alert-content">
-                <p class="alert-title">공동구매 절감 달성</p>
-                <p class="alert-time">이번 달 식자재 비용 38% 절감</p>
-              </div>
-              <button class="alert-btn" onclick="showPage('ingredients')">보기</button>
-            </div>
-            <div class="alert-item info">
-              <div class="alert-icon"><i class="fas fa-comment"></i></div>
-              <div class="alert-content">
-                <p class="alert-title">보호자 메시지 2건</p>
-                <p class="alert-time">박영희 어르신 보호자 외 1명</p>
-              </div>
-              <button class="alert-btn" onclick="showPage('guardian')">확인</button>
-            </div>
+          <div class="hero-point">
+            <strong>AI Ready</strong>
+            <span>식단 추천·리포트 자동화·이상징후 분석 확장</span>
           </div>
         </div>
       </div>
-
-      <!-- 환자 현황 요약 -->
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-users"></i> 환자 현황 요약</h2>
-          <button class="btn-outline" onclick="showPage('patients')">전체 보기</button>
-        </div>
-        <div class="patient-summary-grid">
-          <div class="patient-mini-card" onclick="showPage('patients')">
-            <div class="patient-avatar" style="background:#e8f5e9">👴</div>
-            <div class="patient-mini-info">
-              <p class="patient-name">김순자 (82세)</p>
-              <div class="patient-tags">
-                <span class="tag diabetes">당뇨</span>
-                <span class="tag hypertension">고혈압</span>
-              </div>
-              <p class="patient-meal">점심 ✅ 약 ⚠️</p>
-            </div>
+      <div class="hero-panel">
+        <h3>Investor Snapshot</h3>
+        <div class="panel-stack">
+          <div class="panel-card">
+            <div class="label">핵심 문제</div>
+            <div class="value">정보 단절 + 수기 운영</div>
+            <div class="desc">식사, 투약, 건강 기록, 보호자 커뮤니케이션이 분리되어 누락과 대응 지연이 발생합니다.</div>
           </div>
-          <div class="patient-mini-card" onclick="showPage('patients')">
-            <div class="patient-avatar" style="background:#e3f2fd">👵</div>
-            <div class="patient-mini-info">
-              <p class="patient-name">이철수 (78세)</p>
-              <div class="patient-tags">
-                <span class="tag kidney">신장투석</span>
-              </div>
-              <p class="patient-meal">점심 ❌ 약 ✅</p>
-            </div>
+          <div class="panel-card">
+            <div class="label">핵심 솔루션</div>
+            <div class="value">역할 기반 통합 워크플로우</div>
+            <div class="desc">기관 운영자, 현장 간병인, 가족 보호자를 하나의 서비스 안에서 연결합니다.</div>
           </div>
-          <div class="patient-mini-card" onclick="showPage('patients')">
-            <div class="patient-avatar" style="background:#fce4ec">👴</div>
-            <div class="patient-mini-info">
-              <p class="patient-name">박영희 (75세)</p>
-              <div class="patient-tags">
-                <span class="tag normal">일반식</span>
-              </div>
-              <p class="patient-meal">점심 ✅ 약 ✅</p>
-            </div>
-          </div>
-          <div class="patient-mini-card" onclick="showPage('patients')">
-            <div class="patient-avatar" style="background:#f3e5f5">👵</div>
-            <div class="patient-mini-info">
-              <p class="patient-name">최동수 (85세)</p>
-              <div class="patient-tags">
-                <span class="tag soft">연식</span>
-                <span class="tag diabetes">당뇨</span>
-              </div>
-              <p class="patient-meal">점심 ✅ 약 ✅</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 비용 절감 현황 -->
-      <div class="card savings-card">
-        <div class="card-header">
-          <h2><i class="fas fa-piggy-bank"></i> 이번 달 공동구매 절감 현황</h2>
-        </div>
-        <div class="savings-grid">
-          <div class="savings-item">
-            <div class="savings-circle">
-              <span class="savings-percent">38%</span>
-              <span class="savings-label">절감</span>
-            </div>
-            <p>식자재 비용</p>
-          </div>
-          <div class="savings-stats">
-            <div class="savings-row">
-              <span>개별 구매 예상 비용</span>
-              <span class="original-price">₩2,450,000</span>
-            </div>
-            <div class="savings-row">
-              <span>공동구매 실제 비용</span>
-              <span class="actual-price">₩1,519,000</span>
-            </div>
-            <div class="savings-row highlight">
-              <span>절감 금액</span>
-              <span class="saved-price">₩931,000 절감!</span>
-            </div>
-            <div class="savings-row">
-              <span>참여 요양원</span>
-              <span>인근 4개 요양원 공동구매</span>
-            </div>
+          <div class="panel-card">
+            <div class="label">확장 포인트</div>
+            <div class="value">Meal-care data layer</div>
+            <div class="desc">케어 현장에서 가장 자주 반복되는 식사/투약/기록 데이터를 기반으로 장기적인 AI 분석 자산을 만듭니다.</div>
           </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- 환자 관리 페이지 -->
-    <div id="page-patients" class="page">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-user-injured"></i> 환자 목록</h2>
-          <button class="btn-primary" onclick="openAddPatient()"><i class="fas fa-plus"></i> 환자 추가</button>
+  <section class="section" id="metrics">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Market & KPI</div>
+        <h2>투자자가 바로 이해할 수 있는 핵심 지표 구조</h2>
+        <p>현재는 IR용 가설 수치와 시장 관점 메시지를 중심으로 구성하고, 이후 파일럿 운영 데이터와 공공 통계로 고도화할 수 있습니다.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="label">고령화 메가트렌드</div><div class="value">65+</div><div class="sub">고령 인구 증가로 식사·건강·돌봄 관리 수요가 구조적으로 확대</div></div>
+        <div class="metric-card"><div class="label">운영 효율 지표</div><div class="value">30%+</div><div class="sub">기록/공유/확인 업무 시간 절감 잠재력</div></div>
+        <div class="metric-card"><div class="label">서비스 모델</div><div class="value">B2B SaaS</div><div class="sub">기관 구독 + 보호자 확장형 B2B2C 구조</div></div>
+        <div class="metric-card"><div class="label">글로벌 확장성</div><div class="value">APAC → US</div><div class="sub">고령화·케어 인력 부족은 글로벌 공통 과제</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="problem" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Why Now</div>
+        <h2>왜 지금 이 서비스가 필요한가</h2>
+        <p>케어 현장의 반복 업무는 늘고 있지만, 여전히 전화·메신저·수기 기록 중심 운영이 많아 품질과 효율 모두 한계에 부딪힙니다.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card"><i class="fas fa-link-slash"></i><h3>정보 단절</h3><p>관리자, 보호자, 간병인 사이에 실시간 연결이 부족해 식사·투약·건강 정보가 분산됩니다.</p></div>
+        <div class="problem-card"><i class="fas fa-triangle-exclamation"></i><h3>누락과 대응 지연</h3><p>수기 기록과 메시지 위주의 업무 구조는 복약 누락, 식사 거부, 특이사항 대응 지연으로 이어집니다.</p></div>
+        <div class="problem-card"><i class="fas fa-chart-line"></i><h3>데이터 자산 부재</h3><p>개인 맞춤 식단, 건강 인사이트, 운영 효율 분석에 필요한 구조화된 케어 데이터가 축적되지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="product">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Product Overview</div>
+        <h2>닥터푸드는 3자 워크플로우를 하나로 묶습니다</h2>
+        <p>단순한 기록 앱이 아니라 운영자, 현장 담당자, 가족 보호자 모두가 같은 흐름 안에서 데이터를 공유하는 통합 케어 경험을 제공합니다.</p>
+      </div>
+      <div class="product-grid">
+        <div class="product-card"><i class="fas fa-desktop"></i><h3>관리자 앱</h3><p>입소자 관리, 식단 운영, 투약 현황, 보호자 알림, 식자재 공동구매까지 기관 운영에 필요한 대시보드를 제공합니다.</p></div>
+        <div class="product-card"><i class="fas fa-user-nurse"></i><h3>간병인 앱</h3><p>현장 체크리스트, 미복용 알림, 활동 사진, 응급 정보, 보호자 채팅으로 실제 돌봄 업무를 빠르게 처리합니다.</p></div>
+        <div class="product-card"><i class="fas fa-mobile-screen-button"></i><h3>보호자 앱</h3><p>식단, 투약, 건강상태, 사진, 채팅을 한 화면에서 확인하여 돌봄의 투명성과 신뢰를 높입니다.</p></div>
+      </div>
+      <div class="compare-wrap">
+        <div class="compare-card">
+          <h3>기존 케어 앱 한계</h3>
+          <ul>
+            <li><span>역할별 워크플로우 분리 부족</span><span class="chip-low">제한적</span></li>
+            <li><span>식사·건강·소통 데이터 연결</span><span class="chip-low">분절</span></li>
+            <li><span>기관 운영 대시보드</span><span class="chip-mid">부분 지원</span></li>
+            <li><span>보호자 실시간 신뢰 경험</span><span class="chip-mid">부분 지원</span></li>
+          </ul>
         </div>
-        <div class="filter-bar">
-          <button class="filter-btn active" onclick="filterPatients('all')">전체 (32)</button>
-          <button class="filter-btn" onclick="filterPatients('diabetes')">당뇨 (12)</button>
-          <button class="filter-btn" onclick="filterPatients('kidney')">신장투석 (5)</button>
-          <button class="filter-btn" onclick="filterPatients('hypertension')">고혈압 (8)</button>
-          <button class="filter-btn" onclick="filterPatients('soft')">연식 (7)</button>
-        </div>
-        <div class="patient-table-wrapper">
-          <table class="patient-table">
-            <thead>
-              <tr>
-                <th>이름</th>
-                <th>나이</th>
-                <th>기저질환</th>
-                <th>식단 유형</th>
-                <th>오늘 식사</th>
-                <th>투약</th>
-                <th>담당 간병인</th>
-                <th>관리</th>
-              </tr>
-            </thead>
-            <tbody id="patient-tbody">
-              <tr>
-                <td><div class="patient-name-cell"><span class="avatar-sm">👴</span>김순자</div></td>
-                <td>82세</td>
-                <td><span class="tag diabetes">당뇨</span><span class="tag hypertension">고혈압</span></td>
-                <td><span class="diet-badge diabetes-diet">당뇨식</span></td>
-                <td><span class="meal-check ok">아침✅ 점심✅</span></td>
-                <td><span class="med-check warn">⚠️ 미복용</span></td>
-                <td>이간병</td>
-                <td><button class="btn-sm" onclick="showPatientDetail('김순자')">상세</button></td>
-              </tr>
-              <tr>
-                <td><div class="patient-name-cell"><span class="avatar-sm">👵</span>이철수</div></td>
-                <td>78세</td>
-                <td><span class="tag kidney">신장투석</span></td>
-                <td><span class="diet-badge kidney-diet">저단백식</span></td>
-                <td><span class="meal-check warn">아침✅ 점심❌</span></td>
-                <td><span class="med-check ok">✅ 완료</span></td>
-                <td>박간병</td>
-                <td><button class="btn-sm" onclick="showPatientDetail('이철수')">상세</button></td>
-              </tr>
-              <tr>
-                <td><div class="patient-name-cell"><span class="avatar-sm">👴</span>박영희</div></td>
-                <td>75세</td>
-                <td><span class="tag normal">없음</span></td>
-                <td><span class="diet-badge normal-diet">일반식</span></td>
-                <td><span class="meal-check ok">아침✅ 점심✅</span></td>
-                <td><span class="med-check ok">✅ 완료</span></td>
-                <td>김간병</td>
-                <td><button class="btn-sm" onclick="showPatientDetail('박영희')">상세</button></td>
-              </tr>
-              <tr>
-                <td><div class="patient-name-cell"><span class="avatar-sm">👵</span>최동수</div></td>
-                <td>85세</td>
-                <td><span class="tag soft">연하곤란</span><span class="tag diabetes">당뇨</span></td>
-                <td><span class="diet-badge soft-diet">연식+당뇨</span></td>
-                <td><span class="meal-check ok">아침✅ 점심✅</span></td>
-                <td><span class="med-check ok">✅ 완료</span></td>
-                <td>이간병</td>
-                <td><button class="btn-sm" onclick="showPatientDetail('최동수')">상세</button></td>
-              </tr>
-              <tr>
-                <td><div class="patient-name-cell"><span class="avatar-sm">👴</span>정말순</div></td>
-                <td>79세</td>
-                <td><span class="tag hypertension">고혈압</span></td>
-                <td><span class="diet-badge low-salt-diet">저염식</span></td>
-                <td><span class="meal-check ok">아침✅ 점심✅</span></td>
-                <td><span class="med-check ok">✅ 완료</span></td>
-                <td>박간병</td>
-                <td><button class="btn-sm" onclick="showPatientDetail('정말순')">상세</button></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="compare-card">
+          <h3>DoctorFood 차별점</h3>
+          <ul>
+            <li><span>관리자·간병인·보호자 역할 기반 설계</span><span class="chip-good">강점</span></li>
+            <li><span>식사 중심 케어 데이터 구조화</span><span class="chip-good">강점</span></li>
+            <li><span>AI 식단 추천 및 리포트 확장성</span><span class="chip-good">강점</span></li>
+            <li><span>기관 도입형 SaaS + 가족 확장</span><span class="chip-good">강점</span></li>
+          </ul>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- AI 식단 추천 페이지 -->
-    <div id="page-ai-diet" class="page">
-      <div class="ai-header-card">
-        <div class="ai-icon-big"><i class="fas fa-robot"></i></div>
-        <div class="ai-header-text">
-          <h2>AI 맞춤 식단 추천 엔진</h2>
-          <p>환자의 건강 데이터, 기저질환, 영양 상태를 분석하여 개인별 최적 식단을 자동 생성합니다</p>
-          <div class="ai-features">
-            <span><i class="fas fa-check-circle"></i> 공통 식자재 최대 활용</span>
-            <span><i class="fas fa-check-circle"></i> 기저질환별 맞춤 조리법</span>
-            <span><i class="fas fa-check-circle"></i> 비용 최적화</span>
-            <span><i class="fas fa-check-circle"></i> 영양 균형 보장</span>
-          </div>
-        </div>
-        <button class="btn-ai" onclick="generateAIDiet()">
-          <i class="fas fa-magic"></i> AI 식단 생성
-        </button>
+  <section class="section" id="business" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Business Model</div>
+        <h2>매출 구조는 SaaS 중심으로 명확하게 설계할 수 있습니다</h2>
+        <p>초기에는 기관 단위 구독형 모델로 시작하고, 보호자 프리미엄 기능과 식단/리포트/제휴 기반의 부가 매출로 확장할 수 있습니다.</p>
       </div>
-
-      <div class="diet-week-selector">
-        <button class="week-btn" onclick="changeWeek(-1)"><i class="fas fa-chevron-left"></i></button>
-        <span id="week-label">2026년 4월 4주차</span>
-        <button class="week-btn" onclick="changeWeek(1)"><i class="fas fa-chevron-right"></i></button>
+      <div class="business-grid">
+        <div class="business-card"><div class="label">Core Revenue</div><div class="value">B2B SaaS</div><p>요양원·실버케어 기관 대상 월 구독형 과금</p></div>
+        <div class="business-card"><div class="label">Expansion</div><div class="value">B2B2C</div><p>기관 도입 후 보호자 앱 프리미엄 기능 유료화</p></div>
+        <div class="business-card"><div class="label">Add-on</div><div class="value">AI Report</div><p>개인 맞춤 리포트, 이상징후 알림, 데이터 분석 기능 추가</p></div>
+        <div class="business-card"><div class="label">Partnership</div><div class="value">Food / Health</div><p>건강식 추천, 식자재 공동구매, 의료/보험 제휴 모델 확장</p></div>
       </div>
+    </div>
+  </section>
 
-      <div class="diet-grid">
-        <!-- 공통 식자재 풀 -->
-        <div class="card ingredient-pool-card">
-          <div class="card-header">
-            <h2><i class="fas fa-layer-group"></i> 이번 주 공통 식자재 풀</h2>
-            <span class="ai-generated-badge"><i class="fas fa-robot"></i> AI 최적화</span>
-          </div>
-          <p class="pool-desc">아래 식자재로 32명 전원의 맞춤 식단을 구성합니다 (조리법만 다르게)</p>
-          <div class="ingredient-tags">
-            <span class="ing-tag protein">🍗 닭고기</span>
-            <span class="ing-tag protein">🐟 고등어</span>
-            <span class="ing-tag protein">🥚 달걀</span>
-            <span class="ing-tag protein">🫘 두부</span>
-            <span class="ing-tag veggie">🥦 브로콜리</span>
-            <span class="ing-tag veggie">🥕 당근</span>
-            <span class="ing-tag veggie">🌿 시금치</span>
-            <span class="ing-tag veggie">🧅 양파</span>
-            <span class="ing-tag grain">🌾 현미</span>
-            <span class="ing-tag grain">🍚 잡곡</span>
-            <span class="ing-tag grain">🥔 감자</span>
-          </div>
-          <div class="cost-saving-bar">
-            <div class="cost-label">
-              <span>공동구매 절감률</span>
-              <span class="cost-percent">38%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width:38%"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 식단 유형별 예시 -->
-        <div class="card">
-          <div class="card-header">
-            <h2><i class="fas fa-utensils"></i> 오늘 저녁 - 식단 유형별 비교</h2>
-          </div>
-          <div class="diet-comparison">
-            <div class="diet-type-card">
-              <div class="diet-type-header normal">
-                <i class="fas fa-utensils"></i> 일반식 (18명)
-              </div>
-              <div class="diet-items">
-                <p>🍚 현미잡곡밥</p>
-                <p>🍲 된장찌개</p>
-                <p>🍗 닭볶음탕 (보통 간)</p>
-                <p>🥦 브로콜리볶음</p>
-                <p>🥗 시금치나물</p>
-              </div>
-              <div class="nutrition-info">
-                <span>열량: 580kcal</span>
-                <span>나트륨: 1,200mg</span>
-              </div>
-            </div>
-            <div class="diet-type-card">
-              <div class="diet-type-header diabetes">
-                <i class="fas fa-tint"></i> 당뇨식 (12명)
-              </div>
-              <div class="diet-items">
-                <p>🌾 현미밥 (소량)</p>
-                <p>🥣 맑은 두부국</p>
-                <p>🍗 닭가슴살 구이 (무소스)</p>
-                <p>🥦 브로콜리 찜</p>
-                <p>🥗 시금치나물 (저염)</p>
-              </div>
-              <div class="nutrition-info">
-                <span>열량: 420kcal</span>
-                <span>당지수: 낮음</span>
-              </div>
-            </div>
-            <div class="diet-type-card">
-              <div class="diet-type-header kidney">
-                <i class="fas fa-filter"></i> 저단백식 (5명)
-              </div>
-              <div class="diet-items">
-                <p>🍚 백미밥 (소량)</p>
-                <p>🥣 채소국 (저칼륨)</p>
-                <p>🍗 닭가슴살 소량</p>
-                <p>🥕 당근볶음 (저인)</p>
-                <p>🥚 달걀흰자 찜</p>
-              </div>
-              <div class="nutrition-info">
-                <span>열량: 380kcal</span>
-                <span>단백질: 제한</span>
-              </div>
-            </div>
-            <div class="diet-type-card">
-              <div class="diet-type-header soft">
-                <i class="fas fa-blender"></i> 연식 (7명)
-              </div>
-              <div class="diet-items">
-                <p>🍚 부드러운 죽</p>
-                <p>🥣 두부연두부찌개</p>
-                <p>🍗 닭고기 다짐 완자</p>
-                <p>🥦 브로콜리 퓨레</p>
-                <p>🥕 당근 으깸</p>
-              </div>
-              <div class="nutrition-info">
-                <span>열량: 350kcal</span>
-                <span>질감: 부드러움</span>
-              </div>
-            </div>
-          </div>
-        </div>
+  <section class="section" id="global">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Global Opportunity</div>
+        <h2>한국에서 시작하지만 문제는 글로벌합니다</h2>
+        <p>초고령 사회, 케어 인력 부족, 가족 돌봄 부담, 디지털 전환 수요는 일본·미국·유럽·동남아 모두가 겪는 공통 문제입니다.</p>
       </div>
+      <div class="global-grid">
+        <div class="global-card"><div class="label">Korea</div><div class="value">Fast Aging</div><p>고령화 속도가 빨라 디지털 케어 운영 수요가 빠르게 확대되는 테스트베드</p></div>
+        <div class="global-card"><div class="label">Japan</div><div class="value">Super-aged</div><p>초고령 사회에서 기관 운영 효율과 가족 커뮤니케이션 니즈가 매우 큼</p></div>
+        <div class="global-card"><div class="label">US</div><div class="value">Home & Senior Care</div><p>홈케어·시니어케어 시장이 크고 SaaS 기반 케어 솔루션 수용성이 높음</p></div>
+        <div class="global-card"><div class="label">SEA</div><div class="value">Digital Shift</div><p>케어 산업 디지털 전환 초기 단계로 파트너십 기반 확장 가능성 보유</p></div>
+      </div>
+    </div>
+  </section>
 
-      <!-- 주간 식단 캘린더 -->
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-calendar-week"></i> 주간 식단 캘린더</h2>
-          <button class="btn-outline"><i class="fas fa-download"></i> 식단표 출력</button>
-        </div>
-        <div class="week-calendar">
-          <div class="cal-header">
-            <div class="cal-time"></div>
-            <div class="cal-day">월 (4/28)</div>
-            <div class="cal-day">화 (4/29)</div>
-            <div class="cal-day today">수 (4/30)</div>
-            <div class="cal-day">목 (5/1)</div>
-            <div class="cal-day">금 (5/2)</div>
-          </div>
-          <div class="cal-row">
-            <div class="cal-time"><i class="fas fa-sun"></i> 아침</div>
-            <div class="cal-cell">현미밥, 미역국, 계란찜</div>
-            <div class="cal-cell">잡곡밥, 콩나물국, 두부조림</div>
-            <div class="cal-cell today-cell">현미밥, 된장국, 두부조림</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-          </div>
-          <div class="cal-row">
-            <div class="cal-time"><i class="fas fa-cloud-sun"></i> 점심</div>
-            <div class="cal-cell">잡곡밥, 갈비탕, 깍두기</div>
-            <div class="cal-cell">현미밥, 순두부찌개, 나물</div>
-            <div class="cal-cell today-cell">잡곡밥, 미역국, 닭볶음탕</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-          </div>
-          <div class="cal-row">
-            <div class="cal-time"><i class="fas fa-moon"></i> 저녁</div>
-            <div class="cal-cell">현미밥, 북어국, 제육볶음</div>
-            <div class="cal-cell">잡곡밥, 된장찌개, 고등어구이</div>
-            <div class="cal-cell today-cell">연두부찌개, 고등어구이</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-            <div class="cal-cell ai-cell"><i class="fas fa-robot"></i> AI 생성</div>
-          </div>
+  <section class="section" id="roadmap" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Roadmap</div>
+        <h2>서비스는 운영 툴에서 데이터 플랫폼으로 진화합니다</h2>
+        <p>닥터푸드는 단기적으로는 현장 효율을 만들고, 중장기적으로는 고령자 케어 데이터를 기반으로 AI 인프라로 확장할 수 있습니다.</p>
+      </div>
+      <div class="roadmap-grid">
+        <div class="roadmap-item"><div class="roadmap-step">1</div><h3>역할 기반 앱 운영</h3><p>관리자·보호자·간병인 워크플로우를 연결하는 MVP 고도화</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">2</div><h3>기관 대시보드 강화</h3><p>운영 리포트, 알림 자동화, 보호자 커뮤니케이션 관리 기능 추가</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">3</div><h3>AI 개인화</h3><p>맞춤 식단 추천, 복약/식사 이상징후 감지, 케어 리포트 자동 생성</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">4</div><h3>글로벌 로컬라이징</h3><p>다국어, 국가별 식단/프로토콜/기관 파트너십 적용</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Trust Signals</div>
+        <h2>초기 단계에서도 신뢰를 보여줄 수 있는 근거</h2>
+        <p>투자자에게는 아이디어보다 실행력이 더 중요합니다. 현재 구현 범위와 확장 여지를 동시에 보여주는 구조로 정리했습니다.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card"><div class="label">Demo Coverage</div><div class="value">3 Apps</div><div class="sub">관리자/보호자/간병인 역할별 데모 구현 완료</div></div>
+        <div class="trust-card"><div class="label">Deployment</div><div class="value">GitHub Ready</div><div class="sub">배포 가능한 정적 웹앱 구조로 데모 검증 가능</div></div>
+        <div class="trust-card"><div class="label">Core Experience</div><div class="value">Workflow First</div><div class="sub">식사·투약·리포트·채팅을 하나의 케어 흐름으로 통합</div></div>
+        <div class="trust-card"><div class="label">Next Step</div><div class="value">PoC Ready</div><div class="sub">기관 파일럿, KPI 추적, 데이터 기반 개선 사이클 설계 가능</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-section" id="contact">
+    <div class="container cta-grid">
+      <div class="cta-card dark">
+        <h3>닥터푸드는 고령화 문제를 푸는 디지털 케어 인프라를 지향합니다</h3>
+        <p>한국에서 빠르게 검증하고, 초고령 사회가 공통으로 겪는 식사·건강·돌봄 운영 문제를 글로벌 SaaS 모델로 확장할 수 있습니다.</p>
+        <ul>
+          <li>• 투자 미팅용 데모 흐름: 랜딩 → 관리자 → 보호자 → 간병인</li>
+          <li>• 향후 추가 가능: 실제 통계 수치 카드, 팀 소개, 파일럿 KPI, 문의 폼</li>
+          <li>• 핵심 메시지: “고령화 시대의 meal-care data infrastructure”</li>
+        </ul>
+      </div>
+      <div class="cta-card">
+        <h3>바로 확인할 수 있는 데모</h3>
+        <p>투자자, 파트너, 파일럿 기관에 보여주기 좋은 역할 기반 데모 링크를 한 곳에 모았습니다.</p>
+        <div style="display:grid; gap:12px; margin-top:18px;">
+          <a class="btn btn-primary" href="admin.html"><i class="fas fa-chart-line"></i> 관리자 데모 열기</a>
+          <a class="btn btn-secondary" href="guardian.html"><i class="fas fa-user-group"></i> 보호자 데모 열기</a>
+          <a class="btn btn-secondary" href="caregiver.html"><i class="fas fa-stethoscope"></i> 간병인 데모 열기</a>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- 투약 관리 페이지 -->
-    <div id="page-medication" class="page">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-pills"></i> 오늘의 투약 현황</h2>
-          <div class="med-summary">
-            <span class="med-ok">완료 28명</span>
-            <span class="med-warn">미완료 4명</span>
-          </div>
-        </div>
-        <div class="med-timeline">
-          <div class="med-time-slot">
-            <div class="time-label"><i class="fas fa-sun"></i> 아침 (08:00)</div>
-            <div class="med-patients">
-              <div class="med-patient-card done">
-                <span class="patient-name-med">김순자</span>
-                <div class="med-list">
-                  <span class="med-item">혈압약</span>
-                  <span class="med-item">당뇨약</span>
-                </div>
-                <span class="med-status done"><i class="fas fa-check"></i> 완료 08:15</span>
-              </div>
-              <div class="med-patient-card done">
-                <span class="patient-name-med">이철수</span>
-                <div class="med-list">
-                  <span class="med-item">투석보조제</span>
-                  <span class="med-item">철분제</span>
-                </div>
-                <span class="med-status done"><i class="fas fa-check"></i> 완료 08:10</span>
-              </div>
-              <div class="med-patient-card done">
-                <span class="patient-name-med">박영희</span>
-                <div class="med-list">
-                  <span class="med-item">종합비타민</span>
-                </div>
-                <span class="med-status done"><i class="fas fa-check"></i> 완료 08:20</span>
-              </div>
-            </div>
-          </div>
-          <div class="med-time-slot">
-            <div class="time-label warn-time"><i class="fas fa-cloud-sun"></i> 점심 (13:00) ⚠️ 미완료 있음</div>
-            <div class="med-patients">
-              <div class="med-patient-card done">
-                <span class="patient-name-med">이철수</span>
-                <div class="med-list">
-                  <span class="med-item">혈압약</span>
-                </div>
-                <span class="med-status done"><i class="fas fa-check"></i> 완료 13:05</span>
-              </div>
-              <div class="med-patient-card missed">
-                <span class="patient-name-med">김순자</span>
-                <div class="med-list">
-                  <span class="med-item">혈압약</span>
-                  <span class="med-item">당뇨약</span>
-                </div>
-                <span class="med-status missed"><i class="fas fa-times"></i> 미복용</span>
-                <button class="btn-sm-red" onclick="markMedDone('김순자', '점심')">복용 확인</button>
-              </div>
-              <div class="med-patient-card missed">
-                <span class="patient-name-med">최동수</span>
-                <div class="med-list">
-                  <span class="med-item">당뇨약</span>
-                </div>
-                <span class="med-status missed"><i class="fas fa-times"></i> 미복용</span>
-                <button class="btn-sm-red" onclick="markMedDone('최동수', '점심')">복용 확인</button>
-              </div>
-            </div>
-          </div>
-          <div class="med-time-slot upcoming-slot">
-            <div class="time-label upcoming-time"><i class="fas fa-moon"></i> 저녁 (19:00) - 예정</div>
-            <div class="med-patients">
-              <div class="med-patient-card upcoming">
-                <span class="patient-name-med">김순자</span>
-                <div class="med-list">
-                  <span class="med-item">수면제</span>
-                </div>
-                <span class="med-status upcoming">예정</span>
-              </div>
-              <div class="med-patient-card upcoming">
-                <span class="patient-name-med">이철수</span>
-                <div class="med-list">
-                  <span class="med-item">투석보조제</span>
-                </div>
-                <span class="med-status upcoming">예정</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <footer class="footer">
+    <div class="container">
+      닥터푸드 · 고령화 시대의 식사·건강·돌봄 데이터를 연결하는 통합 케어 플랫폼
     </div>
-
-    <!-- 보호자 알림 페이지 -->
-    <div id="page-guardian" class="page">
-      <div class="guardian-grid">
-        <div class="card">
-          <div class="card-header">
-            <h2><i class="fas fa-comment-dots"></i> 보호자 메시지</h2>
-            <span class="badge-count">2</span>
-          </div>
-          <div class="message-list">
-            <div class="message-item unread">
-              <div class="message-avatar">👨</div>
-              <div class="message-content">
-                <div class="message-header">
-                  <span class="sender">김철민 (김순자 어르신 아들)</span>
-                  <span class="msg-time">오후 2:30</span>
-                </div>
-                <p class="message-text">어머니 오늘 식사는 잘 하셨나요? 혈압약은 드셨는지 확인 부탁드립니다.</p>
-                <div class="message-reply">
-                  <input type="text" placeholder="답장 입력..." class="reply-input" />
-                  <button class="btn-send" onclick="sendReply()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-              </div>
-            </div>
-            <div class="message-item unread">
-              <div class="message-avatar">👩</div>
-              <div class="message-content">
-                <div class="message-header">
-                  <span class="sender">박지수 (박영희 어르신 딸)</span>
-                  <span class="msg-time">오전 11:15</span>
-                </div>
-                <p class="message-text">어머니가 좋아하시는 된장찌개 식단에 넣어주실 수 있나요?</p>
-                <div class="message-reply">
-                  <input type="text" placeholder="답장 입력..." class="reply-input" />
-                  <button class="btn-send" onclick="sendReply()"><i class="fas fa-paper-plane"></i></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h2><i class="fas fa-share-alt"></i> 오늘의 현황 공유</h2>
-            <button class="btn-primary" onclick="sendDailyReport()"><i class="fas fa-paper-plane"></i> 전체 발송</button>
-          </div>
-          <div class="report-preview">
-            <div class="report-card">
-              <div class="report-header">
-                <span>📋 오늘의 케어 리포트</span>
-                <span>2026.04.30</span>
-              </div>
-              <div class="report-patient">
-                <strong>김순자 어르신 (82세)</strong>
-              </div>
-              <div class="report-items">
-                <div class="report-item">
-                  <i class="fas fa-sun"></i>
-                  <span>아침 식사: 현미밥, 된장국 - <strong>완료 ✅</strong></span>
-                </div>
-                <div class="report-item">
-                  <i class="fas fa-cloud-sun"></i>
-                  <span>점심 식사: 잡곡밥, 닭볶음탕 - <strong>완료 ✅</strong></span>
-                </div>
-                <div class="report-item warn-item">
-                  <i class="fas fa-pills"></i>
-                  <span>점심 혈압약: <strong>미복용 ⚠️</strong> - 간병인 확인 중</span>
-                </div>
-                <div class="report-item">
-                  <i class="fas fa-heart"></i>
-                  <span>건강 상태: 양호, 특이사항 없음</span>
-                </div>
-              </div>
-              <div class="report-footer">
-                <span>담당 간병인: 이간병 | 행복한 요양원</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 활동 사진 -->
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-camera"></i> 오늘의 활동 사진</h2>
-          <button class="btn-outline"><i class="fas fa-upload"></i> 사진 업로드</button>
-        </div>
-        <div class="photo-grid">
-          <div class="photo-item">
-            <div class="photo-placeholder">
-              <i class="fas fa-utensils"></i>
-              <p>아침 식사 사진</p>
-              <span>07:45</span>
-            </div>
-          </div>
-          <div class="photo-item">
-            <div class="photo-placeholder">
-              <i class="fas fa-walking"></i>
-              <p>오전 산책</p>
-              <span>10:30</span>
-            </div>
-          </div>
-          <div class="photo-item">
-            <div class="photo-placeholder">
-              <i class="fas fa-utensils"></i>
-              <p>점심 식사 사진</p>
-              <span>12:15</span>
-            </div>
-          </div>
-          <div class="photo-item">
-            <div class="photo-placeholder">
-              <i class="fas fa-gamepad"></i>
-              <p>오후 여가 활동</p>
-              <span>14:00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 식자재 관리 페이지 -->
-    <div id="page-ingredients" class="page">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-seedling"></i> 닥터푸드 농가 - 식자재 관리</h2>
-          <button class="btn-primary"><i class="fas fa-shopping-cart"></i> 공동구매 신청</button>
-        </div>
-        <div class="ingredient-stats">
-          <div class="ing-stat-card">
-            <i class="fas fa-truck"></i>
-            <h3>12개</h3>
-            <p>등록 공급업체</p>
-          </div>
-          <div class="ing-stat-card">
-            <i class="fas fa-qrcode"></i>
-            <h3>QR 추적</h3>
-            <p>전 식자재 출처 공개</p>
-          </div>
-          <div class="ing-stat-card">
-            <i class="fas fa-users"></i>
-            <h3>4개</h3>
-            <p>공동구매 참여 요양원</p>
-          </div>
-          <div class="ing-stat-card">
-            <i class="fas fa-piggy-bank"></i>
-            <h3>38%</h3>
-            <p>이번 달 절감률</p>
-          </div>
-        </div>
-        <div class="ingredient-list">
-          <h3>이번 주 발주 목록 (AI 자동 생성)</h3>
-          <table class="ingredient-table">
-            <thead>
-              <tr>
-                <th>식자재</th>
-                <th>공급 농가</th>
-                <th>수량</th>
-                <th>단가</th>
-                <th>QR 추적</th>
-                <th>인증</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>🍗 닭고기 (국내산)</td>
-                <td>강원 홍천 행복농장</td>
-                <td>15kg</td>
-                <td>₩8,500/kg</td>
-                <td><button class="qr-btn"><i class="fas fa-qrcode"></i> QR</button></td>
-                <td><span class="cert-badge">HACCP</span></td>
-              </tr>
-              <tr>
-                <td>🐟 고등어 (국내산)</td>
-                <td>경남 통영 신선수산</td>
-                <td>10kg</td>
-                <td>₩12,000/kg</td>
-                <td><button class="qr-btn"><i class="fas fa-qrcode"></i> QR</button></td>
-                <td><span class="cert-badge">HACCP</span></td>
-              </tr>
-              <tr>
-                <td>🫘 두부 (국산콩)</td>
-                <td>충북 청주 건강두부</td>
-                <td>20모</td>
-                <td>₩2,500/모</td>
-                <td><button class="qr-btn"><i class="fas fa-qrcode"></i> QR</button></td>
-                <td><span class="cert-badge organic">유기농</span></td>
-              </tr>
-              <tr>
-                <td>🥦 브로콜리</td>
-                <td>전남 해남 싱싱농원</td>
-                <td>8kg</td>
-                <td>₩3,200/kg</td>
-                <td><button class="qr-btn"><i class="fas fa-qrcode"></i> QR</button></td>
-                <td><span class="cert-badge">GAP</span></td>
-              </tr>
-              <tr>
-                <td>🌾 현미 (국내산)</td>
-                <td>경기 이천 황금쌀</td>
-                <td>30kg</td>
-                <td>₩4,800/kg</td>
-                <td><button class="qr-btn"><i class="fas fa-qrcode"></i> QR</button></td>
-                <td><span class="cert-badge">친환경</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- 모달: AI 식단 생성 중 -->
-  <div id="ai-modal" class="modal hidden">
-    <div class="modal-content">
-      <div class="ai-loading">
-        <div class="ai-spinner"><i class="fas fa-robot"></i></div>
-        <h3>AI 식단 생성 중...</h3>
-        <p>32명의 건강 데이터를 분석하고 있습니다</p>
-        <div class="loading-steps">
-          <div class="step active" id="step1">✅ 환자 건강 데이터 분석</div>
-          <div class="step" id="step2">⏳ 기저질환별 영양 요구량 계산</div>
-          <div class="step" id="step3">⏳ 공통 식자재 최적화</div>
-          <div class="step" id="step4">⏳ 개별 맞춤 식단 생성</div>
-          <div class="step" id="step5">⏳ 비용 최적화 완료</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 알림 토스트 -->
-  <div id="toast" class="toast hidden"></div>
-
-  <script src="app.js"></script>
+  </footer>
 </body>
 </html>
