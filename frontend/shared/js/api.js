@@ -96,22 +96,48 @@ export async function getNutritionSummary(patientId, startDate = null, endDate =
   return await apiCall(`/meals/nutrition/summary/${patientId}${queryString ? '?' + queryString : ''}`);
 }
 
-// ===== 인증 API (추후 구현) =====
+// ===== 인증 API =====
 
 /**
- * 로그인
- * @param {string} username - 사용자명
+ * 이메일/비밀번호 회원가입
+ * @param {Object} userData - 사용자 정보
+ * @returns {Promise} 사용자 정보
+ */
+export async function register(userData) {
+  return await apiCall('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(userData),
+    skipAuth: true
+  });
+}
+
+/**
+ * 이메일/비밀번호 로그인
+ * @param {string} email - 이메일
  * @param {string} password - 비밀번호
  * @returns {Promise} 토큰 정보
  */
-export async function login(username, password) {
-  const formData = new FormData();
-  formData.append('username', username);
-  formData.append('password', password);
-  
+export async function login(email, password) {
   const result = await apiCall('/auth/login', {
     method: 'POST',
-    body: formData,
+    body: JSON.stringify({ email, password }),
+    skipAuth: true
+  });
+  
+  setToken(result.access_token);
+  return result;
+}
+
+/**
+ * 카카오 OAuth 로그인
+ * @param {string} code - 카카오 인가 코드
+ * @param {string} redirectUri - 리다이렉트 URI
+ * @returns {Promise} 토큰 정보
+ */
+export async function kakaoLogin(code, redirectUri) {
+  const result = await apiCall('/auth/kakao', {
+    method: 'POST',
+    body: JSON.stringify({ code, redirect_uri: redirectUri }),
     skipAuth: true
   });
   
