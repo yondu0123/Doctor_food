@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원가입 | 닥터푸드</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1f2937;
+      background: linear-gradient(135deg, #f8fffb 0%, #f5f8f7 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    
+    .register-container {
+      width: 100%;
+      max-width: 480px;
+    }
+    
+    .brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #14532d;
+      font-size: 28px;
+      text-decoration: none;
+    }
+    
+    .brand-logo i {
+      color: #22c55e;
+      font-size: 32px;
+    }
+    
+    .register-card {
+      background: white;
+      border-radius: 20px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+    
+    .register-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #14532d;
+      margin-bottom: 8px;
+    }
+    
+    .register-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .form-label .optional {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+    
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.2s ease;
+    }
+    
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+    
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+    
+    .form-select {
+      cursor: pointer;
+      background: white;
+    }
+    
+    .password-strength {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    
+    .strength-bar {
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+    
+    .strength-weak .strength-fill {
+      width: 33%;
+      background: #ef4444;
+    }
+    
+    .strength-medium .strength-fill {
+      width: 66%;
+      background: #f59e0b;
+    }
+    
+    .strength-strong .strength-fill {
+      width: 100%;
+      background: #22c55e;
+    }
+    
+    .register-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #166534, #22c55e);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 24px rgba(22, 101, 52, 0.2);
+      margin-top: 8px;
+    }
+    
+    .register-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(22, 101, 52, 0.3);
+    }
+    
+    .register-btn:active {
+      transform: translateY(0);
+    }
+    
+    .register-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .form-footer a {
+      color: #22c55e;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .form-footer a:hover {
+      color: #166534;
+    }
+    
+    .error-text {
+      color: #dc2626;
+      font-size: 13px;
+      margin-top: 4px;
+      display: none;
+    }
+    
+    .error-text.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <!-- 브랜드 로고 -->
+    <div class="brand">
+      <a href="/" class="brand-logo">
+        <i class="fas fa-utensils"></i>
+        <span>닥터푸드</span>
+      </a>
+    </div>
+    
+    <!-- 회원가입 카드 -->
+    <div class="register-card">
+      <h1 class="register-title">회원가입</h1>
+      <p class="register-subtitle">닥터푸드와 함께 시작하세요</p>
+      
+      <!-- 회원가입 폼 -->
+      <form id="register-form">
+        <!-- 이메일 -->
+        <div class="form-group">
+          <label class="form-label" for="email">이메일</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input" 
+            placeholder="example@email.com"
+            required
+          />
+          <div id="email-error" class="error-text"></div>
+        </div>
+        
+        <!-- 비밀번호 -->
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            placeholder="8자 이상 입력하세요"
+            required
+          />
+          <div class="password-strength">
+            <div class="strength-bar">
+              <div class="strength-fill"></div>
+            </div>
+          </div>
+          <div id="password-error" class="error-text"></div>
+        </div>
+        
+        <!-- 비밀번호 확인 -->
+        <div class="form-group">
+          <label class="form-label" for="password-confirm">비밀번호 확인</label>
+          <input 
+            type="password" 
+            id="password-confirm" 
+            class="form-input" 
+            placeholder="비밀번호를 다시 입력하세요"
+            required
+          />
+          <div id="password-confirm-error" class="error-text"></div>
+        </div>
+        
+        <!-- 이름 -->
+        <div class="form-group">
+          <label class="form-label" for="full-name">이름</label>
+          <input 
+            type="text" 
+            id="full-name" 
+            class="form-input" 
+            placeholder="홍길동"
+            required
+          />
+        </div>
+        
+        <!-- 전화번호 -->
+        <div class="form-group">
+          <label class="form-label" for="phone">
+            전화번호 <span class="optional">(선택)</span>
+          </label>
+          <input 
+            type="tel" 
+            id="phone" 
+            class="form-input" 
+            placeholder="010-1234-5678"
+          />
+        </div>
+        
+        <!-- 역할 -->
+        <div class="form-group">
+          <label class="form-label" for="role">역할</label>
+          <select id="role" class="form-select" required>
+            <option value="">선택하세요</option>
+            <option value="guardian">보호자</option>
+            <option value="caregiver">간병인</option>
+            <option value="admin">관리자</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="register-btn" id="submit-btn">회원가입</button>
+      </form>
+      
+      <!-- 로그인 링크 -->
+      <div class="form-footer">
+        이미 계정이 있으신가요? <a href="/pages/login.html">로그인</a>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { handleRegister, showError } from '../shared/js/auth.js';
+    
+    const passwordInput = document.getElementById('password');
+    const passwordConfirmInput = document.getElementById('password-confirm');
+    const strengthBar = document.querySelector('.password-strength');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // 비밀번호 강도 체크
+    passwordInput.addEventListener('input', (e) => {
+      const password = e.target.value;
+      const strength = checkPasswordStrength(password);
+      
+      strengthBar.className = 'password-strength';
+      if (password.length > 0) {
+        strengthBar.classList.add(`strength-${strength}`);
+      }
+    });
+    
+    // 비밀번호 확인 체크
+    passwordConfirmInput.addEventListener('input', (e) => {
+      const password = passwordInput.value;
+      const confirm = e.target.value;
+      const errorEl = document.getElementById('password-confirm-error');
+      
+      if (confirm && password !== confirm) {
+        errorEl.textContent = '비밀번호가 일치하지 않습니다';
+        errorEl.classList.add('show');
+      } else {
+        errorEl.classList.remove('show');
+      }
+    });
+    
+    // 회원가입 폼 제출
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = passwordInput.value;
+      const passwordConfirm = passwordConfirmInput.value;
+      const fullName = document.getElementById('full-name').value;
+      const phone = document.getElementById('phone').value;
+      const role = document.getElementById('role').value;
+      
+      // 유효성 검사
+      if (password.length < 8) {
+        showError('비밀번호는 8자 이상이어야 합니다');
+        return;
+      }
+      
+      if (password !== passwordConfirm) {
+        showError('비밀번호가 일치하지 않습니다');
+        return;
+      }
+      
+      if (!role) {
+        showError('역할을 선택해주세요');
+        return;
+      }
+      
+      // 회원가입 데이터
+      const userData = {
+        email,
+        password,
+        full_name: fullName,
+        role,
+        ...(phone && { phone })
+      };
+      
+      try {
+        submitBtn.disabled = true;
+        await handleRegister(userData);
+      } catch (error) {
+        console.error('회원가입 실패:', error);
+        submitBtn.disabled = false;
+      }
+    });
+    
+    // 비밀번호 강도 체크 함수
+    function checkPasswordStrength(password) {
+      if (password.length < 8) return 'weak';
+      
+      let strength = 0;
+      if (password.length >= 12) strength++;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+      
+      if (strength >= 3) return 'strong';
+      if (strength >= 2) return 'medium';
+      return 'weak';
+    }
+  </script>
+</body>
+</html>

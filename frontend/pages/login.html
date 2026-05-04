@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>로그인 | 닥터푸드</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1f2937;
+      background: linear-gradient(135deg, #f8fffb 0%, #f5f8f7 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+    
+    .brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #14532d;
+      font-size: 28px;
+      text-decoration: none;
+    }
+    
+    .brand-logo i {
+      color: #22c55e;
+      font-size: 32px;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+    
+    .login-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #14532d;
+      margin-bottom: 8px;
+    }
+    
+    .login-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+    
+    .kakao-btn {
+      width: 100%;
+      padding: 16px;
+      background: #FEE500;
+      color: #000000;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      margin-bottom: 24px;
+    }
+    
+    .kakao-btn:hover {
+      background: #FDD835;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(254, 229, 0, 0.3);
+    }
+    
+    .kakao-btn img {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.2s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+    
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #166534, #22c55e);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 24px rgba(22, 101, 52, 0.2);
+      margin-top: 8px;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(22, 101, 52, 0.3);
+    }
+    
+    .login-btn:active {
+      transform: translateY(0);
+    }
+    
+    .form-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .form-footer a {
+      color: #22c55e;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .form-footer a:hover {
+      color: #166534;
+    }
+    
+    .error-message {
+      display: none;
+      padding: 12px 16px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: #dc2626;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- 브랜드 로고 -->
+    <div class="brand">
+      <a href="/" class="brand-logo">
+        <i class="fas fa-utensils"></i>
+        <span>닥터푸드</span>
+      </a>
+    </div>
+    
+    <!-- 로그인 카드 -->
+    <div class="login-card">
+      <h1 class="login-title">로그인</h1>
+      <p class="login-subtitle">닥터푸드에 오신 것을 환영합니다</p>
+      
+      <!-- 에러 메시지 -->
+      <div id="error-message" class="error-message"></div>
+      
+      <!-- 카카오 로그인 -->
+      <button type="button" class="kakao-btn" id="kakao-login-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.442 1.443 4.615 3.686 6.143-.203.748-.753 2.784-.868 3.235-.14.548.2.54.422.392.173-.115 2.828-1.886 3.281-2.184C9.456 18.36 10.71 18.5 12 18.5c5.523 0 10-3.477 10-7.5S17.523 3 12 3z"/>
+        </svg>
+        카카오로 시작하기
+      </button>
+      
+      <!-- 구분선 -->
+      <div class="divider">또는</div>
+      
+      <!-- 로그인 폼 -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="email">이메일</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input" 
+            placeholder="example@email.com"
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            placeholder="비밀번호를 입력하세요"
+            required
+          />
+        </div>
+        
+        <button type="submit" class="login-btn">로그인</button>
+      </form>
+      
+      <!-- 회원가입 링크 -->
+      <div class="form-footer">
+        계정이 없으신가요? <a href="/pages/register.html">회원가입</a>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { handleLogin, showError } from '../shared/js/auth.js';
+    
+    // 로그인 폼 제출
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        await handleLogin(email, password);
+      } catch (error) {
+        console.error('로그인 실패:', error);
+      }
+    });
+    
+    // 카카오 로그인 버튼
+    document.getElementById('kakao-login-btn').addEventListener('click', () => {
+      // TODO: 카카오 개발자 앱 등록 후 CLIENT_ID 설정
+      const KAKAO_CLIENT_ID = 'YOUR_KAKAO_CLIENT_ID';
+      const REDIRECT_URI = `${window.location.origin}/pages/auth/kakao-callback.html`;
+      
+      if (KAKAO_CLIENT_ID === 'YOUR_KAKAO_CLIENT_ID') {
+        showError('카카오 로그인이 아직 설정되지 않았습니다. 관리자에게 문의하세요.');
+        return;
+      }
+      
+      const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+      window.location.href = kakaoAuthUrl;
+    });
+  </script>
+</body>
+</html>
