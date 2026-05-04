@@ -27,3 +27,6 @@ aiofiles==23.2.1
 
 # CORS
 fastapi-cors==0.0.6
+
+# HTTP Client (for OAuth)
+httpx==0.25.2

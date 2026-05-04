@@ -16,10 +16,15 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     username = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    hashed_password = Column(String)  # OAuth 사용자는 비밀번호 없을 수 있음
     full_name = Column(String)
     phone = Column(String)
     role = Column(Enum(UserRole), nullable=False)
+    
+    # OAuth 필드
+    oauth_provider = Column(String(20))  # 'email', 'kakao', 'naver'
+    oauth_id = Column(String(100))       # OAuth 제공자의 사용자 ID
+    profile_image = Column(String(500))  # 프로필 이미지 URL
     
     # Metadata
     is_active = Column(Integer, default=1)  # SQLite doesn't have Boolean

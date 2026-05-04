@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 from .core.config import settings
 from .core.database import engine, Base
-from .api import meals
+from .api import meals, auth
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)
@@ -32,6 +32,7 @@ os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 # API 라우터 등록
+app.include_router(auth.router, prefix="/api")
 app.include_router(meals.router, prefix="/api")
 
 @app.get("/")
