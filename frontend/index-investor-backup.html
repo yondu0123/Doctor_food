@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>닥터푸드 | 고령화 시대를 위한 통합 케어 푸드 플랫폼</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1f2937;
+      background: #f5f8f7;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: #14532d;
+      font-size: 22px;
+    }
+    .brand i { color: #22c55e; }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: #475569;
+      flex-wrap: wrap;
+    }
+    .nav-links a:hover { color: #14532d; }
+    .nav-cta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #166534, #22c55e);
+      color: white;
+      box-shadow: 0 10px 24px rgba(22, 101, 52, 0.2);
+    }
+    .btn-secondary {
+      background: white;
+      border-color: #d1d5db;
+      color: #14532d;
+    }
+    .hero {
+      padding: 72px 0 36px;
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(59,130,246,0.10), transparent 25%),
+        linear-gradient(180deg, #f8fffb 0%, #f5f8f7 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #e8f7ee;
+      color: #166534;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+      color: #0f172a;
+    }
+    .hero p {
+      font-size: 18px;
+      color: #475569;
+      margin-bottom: 24px;
+      max-width: 760px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .hero-point {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+    }
+    .hero-point strong { display: block; font-size: 24px; color: #14532d; margin-bottom: 4px; }
+    .hero-point span { font-size: 13px; color: #64748b; }
+    .hero-panel {
+      background: #0f172a;
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+    }
+    .hero-panel h3 { font-size: 20px; margin-bottom: 18px; }
+    .panel-stack {
+      display: grid;
+      gap: 12px;
+    }
+    .panel-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .panel-card .label { font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
+    .panel-card .value { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .panel-card .desc { font-size: 13px; color: #e2e8f0; }
+    .section {
+      padding: 72px 0;
+    }
+    .section-head {
+      margin-bottom: 28px;
+      max-width: 760px;
+    }
+    .section-head .kicker {
+      color: #16a34a;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-head h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
+    .section-head p { color: #64748b; font-size: 17px; }
+    .metrics-grid,
+    .problem-grid,
+    .product-grid,
+    .business-grid,
+    .global-grid,
+    .roadmap-grid,
+    .trust-grid,
+    .cta-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+    .problem-grid { grid-template-columns: repeat(3, 1fr); }
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+    .business-grid { grid-template-columns: repeat(4, 1fr); }
+    .global-grid { grid-template-columns: repeat(4, 1fr); }
+    .trust-grid { grid-template-columns: repeat(4, 1fr); }
+    .cta-grid { grid-template-columns: 1.15fr 0.85fr; align-items: center; }
+    .metric-card,
+    .problem-card,
+    .product-card,
+    .business-card,
+    .global-card,
+    .trust-card,
+    .compare-card,
+    .roadmap-item,
+    .cta-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+    }
+    .metric-card .label,
+    .business-card .label,
+    .global-card .label,
+    .trust-card .label { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+    .metric-card .value,
+    .business-card .value,
+    .global-card .value,
+    .trust-card .value { font-size: 34px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    .metric-card .sub,
+    .business-card p,
+    .global-card p,
+    .trust-card .sub { font-size: 14px; color: #475569; }
+    .problem-card i,
+    .product-card i,
+    .roadmap-item i {
+      font-size: 24px;
+      color: #16a34a;
+      margin-bottom: 14px;
+    }
+    .problem-card h3,
+    .product-card h3,
+    .business-card h3,
+    .global-card h3,
+    .roadmap-item h3,
+    .cta-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    .problem-card p,
+    .product-card p,
+    .business-card p,
+    .global-card p,
+    .roadmap-item p,
+    .cta-card p { color: #64748b; font-size: 15px; }
+    .compare-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .compare-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .compare-card li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eef2f7;
+    }
+    .compare-card li:last-child { border-bottom: none; padding-bottom: 0; }
+    .chip-good, .chip-mid, .chip-low {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .chip-good { background: #dcfce7; color: #166534; }
+    .chip-mid { background: #eff6ff; color: #1d4ed8; }
+    .chip-low { background: #f8fafc; color: #64748b; }
+    .roadmap-grid { grid-template-columns: repeat(4, 1fr); }
+    .roadmap-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #14532d;
+      color: white;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .cta-section { padding-bottom: 88px; }
+    .cta-card.dark {
+      background: linear-gradient(135deg, #0f172a, #14532d);
+      color: white;
+      border: none;
+    }
+    .cta-card.dark h3,
+    .cta-card.dark p,
+    .cta-card.dark li { color: white; }
+    .cta-card ul {
+      margin-top: 14px;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .cta-card li { font-size: 14px; color: #dbe4ef; }
+    .footer {
+      padding: 24px 0 40px;
+      border-top: 1px solid #e2e8f0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .cta-grid,
+      .compare-wrap { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .problem-grid,
+      .product-grid,
+      .business-grid,
+      .global-grid,
+      .roadmap-grid,
+      .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .container { width: min(100% - 32px, 1180px); }
+      .topbar-inner { flex-direction: column; align-items: flex-start; }
+      .hero { padding-top: 48px; }
+      .hero-points,
+      .metrics-grid,
+      .problem-grid,
+      .product-grid,
+      .business-grid,
+      .global-grid,
+      .roadmap-grid,
+      .trust-grid { grid-template-columns: 1fr; }
+      .hero p, .section-head p { font-size: 16px; }
+      .hero-actions, .nav-cta, .nav-links { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <i class="fas fa-heartbeat"></i>
+        <span>닥터푸드</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#problem">문제 정의</a>
+        <a href="#metrics">핵심 지표</a>
+        <a href="#product">제품</a>
+        <a href="#business">수익모델</a>
+        <a href="#global">글로벌</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-secondary" href="pages/admin/admin.html"><i class="fas fa-desktop"></i> 관리자 데모</a>
+        <a class="btn btn-primary" href="#contact"><i class="fas fa-briefcase"></i> 투자 문의</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow"><i class="fas fa-seedling"></i> Korea-first, Global-ready Aging Care Platform</div>
+        <h1>고령화 시대의 식사·건강·돌봄 데이터를 연결하는 통합 케어 푸드 플랫폼</h1>
+        <p>닥터푸드는 보호자, 간병인, 관리자 사이에 분절된 업무를 하나의 워크플로우로 통합하여 케어 품질과 운영 효율을 동시에 개선하는 디지털 케어 인프라입니다.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="pages/login.html"><i class="fas fa-sign-in-alt"></i> 시작하기</a>
+          <a class="btn btn-secondary" href="#features"><i class="fas fa-info-circle"></i> 더 알아보기</a>
+        </div>
+        <div class="hero-points">
+          <div class="hero-point">
+            <strong>3-Role</strong>
+            <span>관리자·보호자·간병인 앱 동시 구현</span>
+          </div>
+          <div class="hero-point">
+            <strong>B2B2C</strong>
+            <span>기관 도입 후 가족/보호자 확장 구조</span>
+          </div>
+          <div class="hero-point">
+            <strong>AI Ready</strong>
+            <span>식단 추천·리포트 자동화·이상징후 분석 확장</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h3>Investor Snapshot</h3>
+        <div class="panel-stack">
+          <div class="panel-card">
+            <div class="label">핵심 문제</div>
+            <div class="value">정보 단절 + 수기 운영</div>
+            <div class="desc">식사, 투약, 건강 기록, 보호자 커뮤니케이션이 분리되어 누락과 대응 지연이 발생합니다.</div>
+          </div>
+          <div class="panel-card">
+            <div class="label">핵심 솔루션</div>
+            <div class="value">역할 기반 통합 워크플로우</div>
+            <div class="desc">기관 운영자, 현장 간병인, 가족 보호자를 하나의 서비스 안에서 연결합니다.</div>
+          </div>
+          <div class="panel-card">
+            <div class="label">확장 포인트</div>
+            <div class="value">Meal-care data layer</div>
+            <div class="desc">케어 현장에서 가장 자주 반복되는 식사/투약/기록 데이터를 기반으로 장기적인 AI 분석 자산을 만듭니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="metrics">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Market & KPI</div>
+        <h2>투자자가 바로 이해할 수 있는 핵심 지표 구조</h2>
+        <p>현재는 IR용 가설 수치와 시장 관점 메시지를 중심으로 구성하고, 이후 파일럿 운영 데이터와 공공 통계로 고도화할 수 있습니다.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="label">고령화 메가트렌드</div><div class="value">65+</div><div class="sub">고령 인구 증가로 식사·건강·돌봄 관리 수요가 구조적으로 확대</div></div>
+        <div class="metric-card"><div class="label">운영 효율 지표</div><div class="value">30%+</div><div class="sub">기록/공유/확인 업무 시간 절감 잠재력</div></div>
+        <div class="metric-card"><div class="label">서비스 모델</div><div class="value">B2B SaaS</div><div class="sub">기관 구독 + 보호자 확장형 B2B2C 구조</div></div>
+        <div class="metric-card"><div class="label">글로벌 확장성</div><div class="value">APAC → US</div><div class="sub">고령화·케어 인력 부족은 글로벌 공통 과제</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="problem" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Why Now</div>
+        <h2>왜 지금 이 서비스가 필요한가</h2>
+        <p>케어 현장의 반복 업무는 늘고 있지만, 여전히 전화·메신저·수기 기록 중심 운영이 많아 품질과 효율 모두 한계에 부딪힙니다.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card"><i class="fas fa-link-slash"></i><h3>정보 단절</h3><p>관리자, 보호자, 간병인 사이에 실시간 연결이 부족해 식사·투약·건강 정보가 분산됩니다.</p></div>
+        <div class="problem-card"><i class="fas fa-triangle-exclamation"></i><h3>누락과 대응 지연</h3><p>수기 기록과 메시지 위주의 업무 구조는 복약 누락, 식사 거부, 특이사항 대응 지연으로 이어집니다.</p></div>
+        <div class="problem-card"><i class="fas fa-chart-line"></i><h3>데이터 자산 부재</h3><p>개인 맞춤 식단, 건강 인사이트, 운영 효율 분석에 필요한 구조화된 케어 데이터가 축적되지 않습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="product">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Product Overview</div>
+        <h2>닥터푸드는 3자 워크플로우를 하나로 묶습니다</h2>
+        <p>단순한 기록 앱이 아니라 운영자, 현장 담당자, 가족 보호자 모두가 같은 흐름 안에서 데이터를 공유하는 통합 케어 경험을 제공합니다.</p>
+      </div>
+      <div class="product-grid">
+        <div class="product-card"><i class="fas fa-desktop"></i><h3>관리자 앱</h3><p>입소자 관리, 식단 운영, 투약 현황, 보호자 알림, 식자재 공동구매까지 기관 운영에 필요한 대시보드를 제공합니다.</p></div>
+        <div class="product-card"><i class="fas fa-user-nurse"></i><h3>간병인 앱</h3><p>현장 체크리스트, 미복용 알림, 활동 사진, 응급 정보, 보호자 채팅으로 실제 돌봄 업무를 빠르게 처리합니다.</p></div>
+        <div class="product-card"><i class="fas fa-mobile-screen-button"></i><h3>보호자 앱</h3><p>식단, 투약, 건강상태, 사진, 채팅을 한 화면에서 확인하여 돌봄의 투명성과 신뢰를 높입니다.</p></div>
+      </div>
+      <div class="compare-wrap">
+        <div class="compare-card">
+          <h3>기존 케어 앱 한계</h3>
+          <ul>
+            <li><span>역할별 워크플로우 분리 부족</span><span class="chip-low">제한적</span></li>
+            <li><span>식사·건강·소통 데이터 연결</span><span class="chip-low">분절</span></li>
+            <li><span>기관 운영 대시보드</span><span class="chip-mid">부분 지원</span></li>
+            <li><span>보호자 실시간 신뢰 경험</span><span class="chip-mid">부분 지원</span></li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>DoctorFood 차별점</h3>
+          <ul>
+            <li><span>관리자·간병인·보호자 역할 기반 설계</span><span class="chip-good">강점</span></li>
+            <li><span>식사 중심 케어 데이터 구조화</span><span class="chip-good">강점</span></li>
+            <li><span>AI 식단 추천 및 리포트 확장성</span><span class="chip-good">강점</span></li>
+            <li><span>기관 도입형 SaaS + 가족 확장</span><span class="chip-good">강점</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="business" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Business Model</div>
+        <h2>매출 구조는 SaaS 중심으로 명확하게 설계할 수 있습니다</h2>
+        <p>초기에는 기관 단위 구독형 모델로 시작하고, 보호자 프리미엄 기능과 식단/리포트/제휴 기반의 부가 매출로 확장할 수 있습니다.</p>
+      </div>
+      <div class="business-grid">
+        <div class="business-card"><div class="label">Core Revenue</div><div class="value">B2B SaaS</div><p>요양원·실버케어 기관 대상 월 구독형 과금</p></div>
+        <div class="business-card"><div class="label">Expansion</div><div class="value">B2B2C</div><p>기관 도입 후 보호자 앱 프리미엄 기능 유료화</p></div>
+        <div class="business-card"><div class="label">Add-on</div><div class="value">AI Report</div><p>개인 맞춤 리포트, 이상징후 알림, 데이터 분석 기능 추가</p></div>
+        <div class="business-card"><div class="label">Partnership</div><div class="value">Food / Health</div><p>건강식 추천, 식자재 공동구매, 의료/보험 제휴 모델 확장</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="global">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Global Opportunity</div>
+        <h2>한국에서 시작하지만 문제는 글로벌합니다</h2>
+        <p>초고령 사회, 케어 인력 부족, 가족 돌봄 부담, 디지털 전환 수요는 일본·미국·유럽·동남아 모두가 겪는 공통 문제입니다.</p>
+      </div>
+      <div class="global-grid">
+        <div class="global-card"><div class="label">Korea</div><div class="value">Fast Aging</div><p>고령화 속도가 빨라 디지털 케어 운영 수요가 빠르게 확대되는 테스트베드</p></div>
+        <div class="global-card"><div class="label">Japan</div><div class="value">Super-aged</div><p>초고령 사회에서 기관 운영 효율과 가족 커뮤니케이션 니즈가 매우 큼</p></div>
+        <div class="global-card"><div class="label">US</div><div class="value">Home & Senior Care</div><p>홈케어·시니어케어 시장이 크고 SaaS 기반 케어 솔루션 수용성이 높음</p></div>
+        <div class="global-card"><div class="label">SEA</div><div class="value">Digital Shift</div><p>케어 산업 디지털 전환 초기 단계로 파트너십 기반 확장 가능성 보유</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="roadmap" style="background:#f8fafc;">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Roadmap</div>
+        <h2>서비스는 운영 툴에서 데이터 플랫폼으로 진화합니다</h2>
+        <p>닥터푸드는 단기적으로는 현장 효율을 만들고, 중장기적으로는 고령자 케어 데이터를 기반으로 AI 인프라로 확장할 수 있습니다.</p>
+      </div>
+      <div class="roadmap-grid">
+        <div class="roadmap-item"><div class="roadmap-step">1</div><h3>역할 기반 앱 운영</h3><p>관리자·보호자·간병인 워크플로우를 연결하는 MVP 고도화</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">2</div><h3>기관 대시보드 강화</h3><p>운영 리포트, 알림 자동화, 보호자 커뮤니케이션 관리 기능 추가</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">3</div><h3>AI 개인화</h3><p>맞춤 식단 추천, 복약/식사 이상징후 감지, 케어 리포트 자동 생성</p></div>
+        <div class="roadmap-item"><div class="roadmap-step">4</div><h3>글로벌 로컬라이징</h3><p>다국어, 국가별 식단/프로토콜/기관 파트너십 적용</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="kicker">Trust Signals</div>
+        <h2>초기 단계에서도 신뢰를 보여줄 수 있는 근거</h2>
+        <p>투자자에게는 아이디어보다 실행력이 더 중요합니다. 현재 구현 범위와 확장 여지를 동시에 보여주는 구조로 정리했습니다.</p>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card"><div class="label">Demo Coverage</div><div class="value">3 Apps</div><div class="sub">관리자/보호자/간병인 역할별 데모 구현 완료</div></div>
+        <div class="trust-card"><div class="label">Deployment</div><div class="value">GitHub Ready</div><div class="sub">배포 가능한 정적 웹앱 구조로 데모 검증 가능</div></div>
+        <div class="trust-card"><div class="label">Core Experience</div><div class="value">Workflow First</div><div class="sub">식사·투약·리포트·채팅을 하나의 케어 흐름으로 통합</div></div>
+        <div class="trust-card"><div class="label">Next Step</div><div class="value">PoC Ready</div><div class="sub">기관 파일럿, KPI 추적, 데이터 기반 개선 사이클 설계 가능</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-section" id="contact">
+    <div class="container cta-grid">
+      <div class="cta-card dark">
+        <h3>닥터푸드는 고령화 문제를 푸는 디지털 케어 인프라를 지향합니다</h3>
+        <p>한국에서 빠르게 검증하고, 초고령 사회가 공통으로 겪는 식사·건강·돌봄 운영 문제를 글로벌 SaaS 모델로 확장할 수 있습니다.</p>
+        <ul>
+          <li>• 투자 미팅용 데모 흐름: 랜딩 → 관리자 → 보호자 → 간병인</li>
+          <li>• 향후 추가 가능: 실제 통계 수치 카드, 팀 소개, 파일럿 KPI, 문의 폼</li>
+          <li>• 핵심 메시지: “고령화 시대의 meal-care data infrastructure”</li>
+        </ul>
+      </div>
+      <div class="cta-card">
+        <h3>바로 확인할 수 있는 데모</h3>
+        <p>투자자, 파트너, 파일럿 기관에 보여주기 좋은 역할 기반 데모 링크를 한 곳에 모았습니다.</p>
+        <div style="display:grid; gap:12px; margin-top:18px;">
+          <a class="btn btn-primary" href="pages/admin/admin.html"><i class="fas fa-chart-line"></i> 관리자 데모 열기</a>
+          <a class="btn btn-secondary" href="pages/guardian/guardian.html"><i class="fas fa-user-group"></i> 보호자 데모 열기</a>
+          <a class="btn btn-secondary" href="pages/caregiver/caregiver.html"><i class="fas fa-stethoscope"></i> 간병인 데모 열기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      닥터푸드 · 고령화 시대의 식사·건강·돌봄 데이터를 연결하는 통합 케어 플랫폼
+    </div>
+  </footer>
+</body>
+</html>
