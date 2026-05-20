@@ -5,7 +5,7 @@ python-multipart==0.0.6
 
 # Database
 sqlalchemy==2.0.25
-psycopg2-binary==2.9.9
+# psycopg2-binary==2.9.9  # PostgreSQL용 (개발에서는 SQLite 사용)
 alembic==1.13.1
 
 # Authentication
@@ -15,7 +15,7 @@ python-dotenv==1.0.0
 
 # AI & ML
 google-generativeai==0.3.2
-Pillow==10.2.0
+Pillow>=10.0.0
 
 # Utilities
 pydantic==2.5.3

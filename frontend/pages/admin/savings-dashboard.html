@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>닥터푸드 - 비용 절감 대시보드</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .header p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+    .main-card {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      margin-bottom: 32px;
+    }
+    .total-savings {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      color: white;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .total-savings::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    .total-savings h2 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    .total-amount {
+      font-size: 64px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .total-subtitle {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .savings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .savings-item {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 32px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .savings-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    .savings-item-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .savings-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .savings-item h3 {
+      font-size: 18px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    .savings-detail {
+      margin-bottom: 16px;
+    }
+    .savings-detail p {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+    }
+    .savings-amount {
+      font-size: 32px;
+      font-weight: 700;
+      color: #27ae60;
+      margin-bottom: 8px;
+    }
+    .savings-comparison {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .before-price {
+      color: #e74c3c;
+      text-decoration: line-through;
+    }
+    .after-price {
+      color: #27ae60;
+      font-weight: 600;
+    }
+    .roi-section {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      padding: 40px;
+      border-radius: 20px;
+      color: white;
+      margin-bottom: 40px;
+    }
+    .roi-section h2 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .roi-calculator {
+      background: rgba(255,255,255,0.2);
+      padding: 24px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background: white;
+    }
+    .roi-result {
+      background: rgba(255,255,255,0.3);
+      padding: 24px;
+      border-radius: 12px;
+      margin-top: 24px;
+    }
+    .roi-result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .roi-result-item:last-child {
+      border-bottom: none;
+      font-size: 20px;
+      font-weight: 700;
+      padding-top: 20px;
+    }
+    .chart-section {
+      margin-bottom: 40px;
+    }
+    .chart-section h2 {
+      font-size: 24px;
+      color: #2c3e50;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chart-container {
+      position: relative;
+      height: 400px;
+      background: #f5f7fa;
+      padding: 24px;
+      border-radius: 16px;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .action-buttons {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💰 비용 절감 대시보드</h1>
+      <p>닥터푸드 사용으로 절감된 비용을 한눈에 확인하세요</p>
+    </div>
+
+    <div class="main-card">
+      <!-- 총 절감액 -->
+      <div class="total-savings">
+        <h2>이번 달 총 절감액</h2>
+        <div class="total-amount" id="total-savings-amount">₩2,850,000</div>
+        <p class="total-subtitle">구독료 대비 <strong>719%</strong> 수익!</p>
+      </div>
+
+      <!-- 항목별 절감 내역 -->
+      <div class="savings-grid">
+        <div class="savings-item">
+          <div class="savings-item-header">
+            <div class="savings-icon">📝</div>
+            <h3>기록 시간 절감</h3>
+          </div>
+          <div class="savings-detail">
+            <p>하루 144분 절감 (90% 단축)</p>
+            <div class="savings-amount">₩2,250,000</div>
+            <div class="savings-comparison">
+              <span>Before: 160분/일</span>
+              <span class="after-price">After: 16분/일</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="savings-item">
+          <div class="savings-item-header">
+            <div class="savings-icon">🛒</div>
+            <h3>식자재 공동구매</h3>
+          </div>
+          <div class="savings-detail">
+            <p>38% 비용 절감</p>
+            <div class="savings-amount">₩931,000</div>
+            <div class="savings-comparison">
+              <span class="before-price">₩2,450,000</span>
+              <span class="after-price">₩1,519,000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="savings-item">
+          <div class="savings-item-header">
+            <div class="savings-icon">📞</div>
+            <h3>보호자 응대 감소</h3>
+          </div>
+          <div class="savings-detail">
+            <p>전화 문의 70% 감소</p>
+            <div class="savings-amount">₩450,000</div>
+            <div class="savings-comparison">
+              <span>Before: 10통/일</span>
+              <span class="after-price">After: 3통/일</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI 계산기 -->
+      <div class="roi-section">
+        <h2>💡 우리 요양원 ROI 계산하기</h2>
+        <div class="roi-calculator">
+          <div class="input-group">
+            <label>입소자 수</label>
+            <input type="number" id="patient-count" value="40" min="1" max="200" onchange="calculateROI()" />
+          </div>
+          <div class="input-group">
+            <label>간병인 수</label>
+            <input type="number" id="caregiver-count" value="3" min="1" max="50" onchange="calculateROI()" />
+          </div>
+          
+          <div class="roi-result" id="roi-result">
+            <div class="roi-result-item">
+              <span>월 구독료</span>
+              <span id="monthly-fee">₩396,000</span>
+            </div>
+            <div class="roi-result-item">
+              <span>월 절감액</span>
+              <span id="monthly-savings">₩3,631,000</span>
+            </div>
+            <div class="roi-result-item">
+              <span>순이익</span>
+              <span id="net-profit">₩3,235,000/월</span>
+            </div>
+            <div class="roi-result-item">
+              <span>연간 이익</span>
+              <span id="annual-profit">₩38,820,000</span>
+            </div>
+            <div class="roi-result-item">
+              <span>ROI</span>
+              <span id="roi-percent">816% 🚀</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 월별 추이 차트 -->
+      <div class="chart-section">
+        <h2><i class="fas fa-chart-line"></i> 월별 절감 추이</h2>
+        <div class="chart-container">
+          <canvas id="savingsChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 시간 절감 비교 차트 -->
+      <div class="chart-section">
+        <h2><i class="fas fa-clock"></i> 업무 시간 비교</h2>
+        <div class="chart-container">
+          <canvas id="timeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 액션 버튼 -->
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="window.print()">
+          <i class="fas fa-print"></i> 리포트 인쇄
+        </button>
+        <button class="btn btn-secondary" onclick="downloadPDF()">
+          <i class="fas fa-download"></i> PDF 다운로드
+        </button>
+        <button class="btn btn-secondary" onclick="shareReport()">
+          <i class="fas fa-share"></i> 공유하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ROI 계산
+    function calculateROI() {
+      const patientCount = parseInt(document.getElementById('patient-count').value) || 40;
+      const caregiverCount = parseInt(document.getElementById('caregiver-count').value) || 3;
+      
+      // 월 구독료 (입소자당 9,900원)
+      const monthlyFee = patientCount * 9900;
+      
+      // 월 절감액
+      const recordTimeSavings = caregiverCount * 750000; // 간병인당 75만원
+      const ingredientSavings = 931000; // 고정
+      const callSavings = 450000; // 고정
+      const totalSavings = recordTimeSavings + ingredientSavings + callSavings;
+      
+      // 순이익
+      const netProfit = totalSavings - monthlyFee;
+      const annualProfit = netProfit * 12;
+      const roi = Math.round((netProfit / monthlyFee) * 100);
+      
+      // 화면 업데이트
+      document.getElementById('monthly-fee').textContent = `₩${monthlyFee.toLocaleString()}`;
+      document.getElementById('monthly-savings').textContent = `₩${totalSavings.toLocaleString()}`;
+      document.getElementById('net-profit').textContent = `₩${netProfit.toLocaleString()}/월`;
+      document.getElementById('annual-profit').textContent = `₩${annualProfit.toLocaleString()}`;
+      document.getElementById('roi-percent').textContent = `${roi}% 🚀`;
+    }
+
+    // 월별 절감 추이 차트
+    const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+    new Chart(savingsCtx, {
+      type: 'line',
+      data: {
+        labels: ['1월', '2월', '3월', '4월', '5월'],
+        datasets: [{
+          label: '월별 절감액',
+          data: [1200000, 1850000, 2300000, 2650000, 2850000],
+          borderColor: '#667eea',
+          backgroundColor: 'rgba(102, 126, 234, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '₩' + (value / 1000000) + 'M';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // 시간 비교 차트
+    const timeCtx = document.getElementById('timeChart').getContext('2d');
+    new Chart(timeCtx, {
+      type: 'bar',
+      data: {
+        labels: ['수기 작성', '닥터푸드'],
+        datasets: [{
+          label: '기록 시간 (분/일)',
+          data: [160, 16],
+          backgroundColor: ['#e74c3c', '#27ae60'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + '분';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // PDF 다운로드
+    function downloadPDF() {
+      alert('PDF 다운로드 기능은 곧 추가됩니다!');
+    }
+
+    // 공유하기
+    function shareReport() {
+      if (navigator.share) {
+        navigator.share({
+          title: '닥터푸드 비용 절감 리포트',
+          text: '이번 달 ₩2,850,000 절감! ROI 719%',
+          url: window.location.href
+        });
+      } else {
+        alert('공유 기능은 모바일에서 사용 가능합니다.');
+      }
+    }
+
+    // 초기 계산
+    calculateROI();
+  </script>
+</body>
+</html>
