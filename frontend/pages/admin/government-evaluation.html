@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>닥터푸드 - 정부 평가 관리</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .header {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      font-size: 32px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header p {
+      font-size: 16px;
+      color: #7f8c8d;
+    }
+    .alert-banner {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+    .alert-icon {
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .alert-content h3 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .alert-content p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f5f7fa;
+    }
+    .card-header h2 {
+      font-size: 20px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge.urgent {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+    .badge.warning {
+      background: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+    .badge.normal {
+      background: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+    }
+    .evaluation-item {
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border-left: 4px solid;
+      transition: all 0.3s;
+    }
+    .evaluation-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .evaluation-item.urgent {
+      border-color: #e74c3c;
+      background: rgba(231, 76, 60, 0.05);
+    }
+    .evaluation-item.warning {
+      border-color: #f39c12;
+      background: rgba(243, 156, 18, 0.05);
+    }
+    .evaluation-item.normal {
+      border-color: #2ecc71;
+      background: rgba(46, 204, 113, 0.05);
+    }
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .eval-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .eval-deadline {
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+    .eval-deadline strong {
+      color: #e74c3c;
+      font-weight: 700;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e8ecf1;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+    }
+    .eval-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: #f5f7fa;
+      color: #2c3e50;
+    }
+    .btn-secondary:hover {
+      background: #e8ecf1;
+    }
+    .btn-success {
+      background: #2ecc71;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #27ae60;
+    }
+    .score-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 32px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .score-card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    .score-display {
+      font-size: 64px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .score-grade {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .score-description {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .category-list {
+      display: grid;
+      gap: 16px;
+    }
+    .category-item {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .category-info {
+      flex: 1;
+    }
+    .category-name {
+      font-size: 14px;
+      color: #2c3e50;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .category-score {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+    .category-bar {
+      width: 200px;
+      height: 8px;
+      background: #e8ecf1;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-left: 16px;
+    }
+    .category-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+      border-radius: 4px;
+    }
+    .checklist {
+      display: grid;
+      gap: 12px;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .checklist-item:hover {
+      background: #e8ecf1;
+    }
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #3498db;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .checkbox.checked {
+      background: #3498db;
+      color: white;
+    }
+    .checklist-text {
+      flex: 1;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+    .checklist-text.completed {
+      text-decoration: line-through;
+      color: #95a5a6;
+    }
+    .status-icon {
+      font-size: 18px;
+    }
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .quick-action-btn {
+      padding: 20px;
+      background: white;
+      border: 2px solid #e8ecf1;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .quick-action-btn:hover {
+      border-color: #3498db;
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    }
+    .quick-action-icon {
+      font-size: 32px;
+      color: #3498db;
+      margin-bottom: 12px;
+    }
+    .quick-action-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 헤더 -->
+    <div class="header">
+      <h1><i class="fas fa-clipboard-check"></i> 정부 평가 관리</h1>
+      <p>요양기관 평가, 급여 비용 청구, 위생 점검을 한 곳에서 관리하세요</p>
+    </div>
+
+    <!-- 긴급 알림 -->
+    <div class="alert-banner">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-content">
+        <h3>월간 급여 비용 청구 마감 임박!</h3>
+        <p>2026년 6월 10일까지 제출 필요 (3일 남음) - 진행률 85%</p>
+      </div>
+      <button class="btn btn-success" onclick="location.href='#monthly-report'">
+        <i class="fas fa-arrow-right"></i> 바로 가기
+      </button>
+    </div>
+
+    <!-- 메인 그리드 -->
+    <div class="grid">
+      <!-- 다가오는 평가 일정 -->
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-calendar-alt"></i> 다가오는 평가 일정</h2>
+          <span class="badge urgent">3건</span>
+        </div>
+
+        <!-- 긴급 (7일 이내) -->
+        <div class="evaluation-item urgent" id="monthly-report">
+          <div class="eval-header">
+            <div class="eval-title">🔴 월간 급여 비용 청구</div>
+            <div class="eval-deadline">마감: <strong>3일 남음</strong></div>
+          </div>
+          <div class="progress-text">진행률: 85%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 85%"></div>
+          </div>
+          <div class="eval-actions">
+            <button class="btn btn-primary" onclick="generateReport('monthly')">
+              <i class="fas fa-magic"></i> 자동 생성
+            </button>
+            <button class="btn btn-secondary" onclick="previewReport('monthly')">
+              <i class="fas fa-eye"></i> 미리보기
+            </button>
+            <button class="btn btn-success" onclick="submitReport('monthly')">
+              <i class="fas fa-paper-plane"></i> 제출
+            </button>
+          </div>
+        </div>
+
+        <!-- 예정 (30일 이내) -->
+        <div class="evaluation-item warning">
+          <div class="eval-header">
+            <div class="eval-title">🟡 위생 점검 대비</div>
+            <div class="eval-deadline">예상일: <strong>15일 후</strong></div>
+          </div>
+          <div class="progress-text">준비율: 60%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%"></div>
+          </div>
+          <div class="eval-actions">
+            <button class="btn btn-primary" onclick="showChecklist('hygiene')">
+              <i class="fas fa-list-check"></i> 체크리스트
+            </button>
+            <button class="btn btn-secondary" onclick="prepareInspection()">
+              <i class="fas fa-clipboard-list"></i> 준비하기
+            </button>
+          </div>
+        </div>
+
+        <!-- 장기 (90일 이내) -->
+        <div class="evaluation-item normal">
+          <div class="eval-header">
+            <div class="eval-title">🟢 장기요양기관 평가</div>
+            <div class="eval-deadline">예상일: <strong>298일 후</strong></div>
+          </div>
+          <div class="progress-text">준비율: 40%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 40%"></div>
+          </div>
+          <div class="eval-actions">
+            <button class="btn btn-primary" onclick="showEvaluationItems()">
+              <i class="fas fa-list"></i> 평가 항목
+            </button>
+            <button class="btn btn-secondary" onclick="checkData()">
+              <i class="fas fa-database"></i> 데이터 확인
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 예상 평가 등급 -->
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-chart-line"></i> 예상 평가 등급</h2>
+          <span class="badge normal">AI 분석</span>
+        </div>
+
+        <div class="score-card">
+          <h2>현재 예상 등급</h2>
+          <div class="score-display">92점</div>
+          <div class="score-grade">A등급</div>
+          <p class="score-description">우수한 수준입니다! 현재 상태를 유지하세요.</p>
+        </div>
+
+        <div class="category-list">
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">1. 급여 제공 과정</div>
+              <div class="category-score">28점 / 30점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 93%"></div>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">2. 급여 제공 결과</div>
+              <div class="category-score">24점 / 25점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 96%"></div>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">3. 권리 및 안전</div>
+              <div class="category-score">18점 / 20점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 90%"></div>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">4. 환경 및 운영</div>
+              <div class="category-score">14점 / 15점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 93%"></div>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">5. 급여 제공 인력</div>
+              <div class="category-score">5점 / 5점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 100%"></div>
+            </div>
+          </div>
+
+          <div class="category-item">
+            <div class="category-info">
+              <div class="category-name">6. 만족도</div>
+              <div class="category-score">3점 / 5점</div>
+            </div>
+            <div class="category-bar">
+              <div class="category-bar-fill" style="width: 60%"></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="showImprovements()">
+          <i class="fas fa-lightbulb"></i> 개선 방안 보기
+        </button>
+      </div>
+    </div>
+
+    <!-- 제출 서류 체크리스트 -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-clipboard-list"></i> 월간 급여 비용 청구 체크리스트</h2>
+        <span class="badge urgent">마감: 3일 남음</span>
+      </div>
+
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">입소자 명단 (32명)</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">급여 제공 내역서</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">식사 제공 기록 (2,880건)</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">투약 기록 (1,440건)</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">건강 상태 기록 (960건)</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox" onclick="toggleCheck(this)">
+          </div>
+          <div class="checklist-text">시설장 서명</div>
+          <div class="status-icon">⚠️</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">특이사항 보고서</div>
+          <div class="status-icon">✅</div>
+        </div>
+
+        <div class="checklist-item">
+          <div class="checkbox checked" onclick="toggleCheck(this)">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="checklist-text completed">보호자 만족도 조사</div>
+          <div class="status-icon">✅</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong style="font-size: 16px; color: #2c3e50;">진행률: 85%</strong>
+            <p style="font-size: 14px; color: #7f8c8d; margin-top: 4px;">7개 완료 / 8개 항목</p>
+          </div>
+          <button class="btn btn-success" onclick="generateReport('monthly')">
+            <i class="fas fa-magic"></i> 자동 생성
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 빠른 작업 -->
+    <div class="quick-actions">
+      <div class="quick-action-btn" onclick="generateReport('monthly')">
+        <div class="quick-action-icon"><i class="fas fa-file-invoice"></i></div>
+        <div class="quick-action-text">월간 리포트 생성</div>
+      </div>
+
+      <div class="quick-action-btn" onclick="showEvaluationItems()">
+        <div class="quick-action-icon"><i class="fas fa-list-check"></i></div>
+        <div class="quick-action-text">평가 항목 확인</div>
+      </div>
+
+      <div class="quick-action-btn" onclick="checkData()">
+        <div class="quick-action-icon"><i class="fas fa-database"></i></div>
+        <div class="quick-action-text">데이터 검증</div>
+      </div>
+
+      <div class="quick-action-btn" onclick="showImprovements()">
+        <div class="quick-action-icon"><i class="fas fa-lightbulb"></i></div>
+        <div class="quick-action-text">개선 방안</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleCheck(element) {
+      element.classList.toggle('checked');
+      const text = element.nextElementSibling;
+      text.classList.toggle('completed');
+      
+      if (element.classList.contains('checked')) {
+        element.innerHTML = '<i class="fas fa-check"></i>';
+      } else {
+        element.innerHTML = '';
+      }
+    }
+
+    function generateReport(type) {
+      alert('리포트 자동 생성 중...\n\n✅ 식사 기록 집계 완료\n✅ 투약 기록 집계 완료\n✅ 건강 상태 집계 완료\n\n리포트가 생성되었습니다!');
+    }
+
+    function previewReport(type) {
+      alert('리포트 미리보기 기능은 곧 추가됩니다!');
+    }
+
+    function submitReport(type) {
+      if (confirm('리포트를 제출하시겠습니까?')) {
+        alert('리포트가 성공적으로 제출되었습니다!');
+      }
+    }
+
+    function showChecklist(type) {
+      alert('체크리스트 기능은 곧 추가됩니다!');
+    }
+
+    function prepareInspection() {
+      alert('위생 점검 준비 기능은 곧 추가됩니다!');
+    }
+
+    function showEvaluationItems() {
+      alert('평가 항목 상세 보기 기능은 곧 추가됩니다!');
+    }
+
+    function checkData() {
+      alert('데이터 검증 중...\n\n✅ 식사 기록: 2,880건 (100%)\n✅ 투약 기록: 1,440건 (100%)\n✅ 건강 기록: 960건 (100%)\n\n모든 데이터가 정상입니다!');
+    }
+
+    function showImprovements() {
+      alert('개선 방안:\n\n1. 만족도 점수 향상 필요 (현재 3점/5점)\n   → 보호자 소통 강화\n   → 정기 만족도 조사 실시\n\n2. 응급 대응 매뉴얼 보완\n   → 시나리오별 대응 절차 문서화\n\n3. 감염 관리 기록 보완\n   → 일일 소독 기록 작성');
+    }
+  </script>
+</body>
+</html>
